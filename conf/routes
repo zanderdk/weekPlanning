@@ -1,0 +1,21 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           weekplanning.controllers.Application.index
+GET     /projects                   weekplanning.controllers.Application.projects
+GET     /test                       weekplanning.controllers.Application.test
+GET     /sigin                      weekplanning.controllers.Auth.signin
+POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
+POST    /authenticate               weekplanning.controllers.Auth.authenticate
+POST    /register                   weekplanning.controllers.Auth.register
+GET     /logout                     weekplanning.controllers.Auth.logout
+GET     /checkUsername              weekplanning.controllers.Auth.checkUsernameAndEmail(username: String, email: String)
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /favicon.ico                controllers.Assets.at(path="/public", file="favicon.ico")
+
+    

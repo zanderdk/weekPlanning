@@ -1,0 +1,10 @@
+@(title: String, activeName: String, lst:Seq[(String, String)])(content: Html)
+
+@main(title) {
+    @menu(activeName, lst)
+    <div class="container">
+        <div class="jumbotron">
+            @content
+        </div>
+    </div>
+}
