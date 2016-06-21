@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.slick" %% "slick" % "3.1.0",
   "com.typesafe.play" %% "play-slick" % "2.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
+
   "org.postgresql" % "postgresql" % "9.4-1206-jdbc42",
   "org.webjars.npm" % "angular2" % "2.0.0-beta.17",
   "org.webjars.npm" % "systemjs" % "0.19.26",

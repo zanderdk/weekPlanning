@@ -16,14 +16,11 @@ class Application extends Controller with Secured {
   }
 
   def index = withAuth { username => implicit request =>
-    Redirect(routes.Application.projects)
-  }
-
-  def p2 = withAuth { username => implicit request =>
-    Ok(views.html.projects(Global.name, "Projects", Global.menu))
+    Redirect(routes.Application.projects())
   }
 
   def projects = withAuth { username => implicit request =>
-    Ok(views.html.testIndex())
+    Ok(views.html.projects(Global.name, "Projects", Global.menu))
   }
+
 }

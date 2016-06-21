@@ -6,8 +6,8 @@
     "component-selector-name": [true, "kebab-case"],
     "directive-selector-type": [true, "attribute"],
     "component-selector-type": [true, "element"],
-    "directive-selector-prefix": [true, "todo"],
-    "component-selector-prefix": [true, "todo"],
+    "directive-selector-prefix": [false, "todo"],
+    "component-selector-prefix": [false, "todo"],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
@@ -17,7 +17,7 @@
     "no-forward-ref" :true,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
-    "pipe-naming": [true, "camelCase", "todo"],
+    "pipe-naming": [false, "camelCase", "todo"],
     "component-class-suffix": true,
     "directive-class-suffix": true,
 
@@ -33,10 +33,10 @@
       true,
       "spaces"
     ],
-    "no-duplicate-variable": true,
+    "no-duplicate-variable": false,
     "no-eval": true,
     "no-internal-module": true,
-    "no-trailing-whitespace": true,
+    "no-trailing-whitespace": false,
     "no-var-keyword": true,
     "one-line": [
       true,
@@ -46,10 +46,6 @@
     "quotemark": [
       true,
       "double"
-    ],
-    "semicolon": [
-      true,
-      "never"
     ],
     "triple-equals": [
       true,
@@ -68,14 +64,6 @@
     "variable-name": [
       true,
       "ban-keywords"
-    ],
-    "whitespace": [
-      false,
-      "check-branch",
-      "check-decl",
-      "check-operator",
-      "check-separator",
-      "check-type"
     ]
   }
 }

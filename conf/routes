@@ -16,6 +16,4 @@ GET     /checkUsername              weekplanning.controllers.Auth.checkUsernameA
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-GET     /favicon.ico                controllers.Assets.at(path="/public", file="favicon.ico")
-
-    
+GET     /favicon.ico                controllers.Assets.at(path="/public", file="images/favicon.ico")
