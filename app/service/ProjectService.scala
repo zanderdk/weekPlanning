@@ -71,18 +71,28 @@ trait ProjectService {
    db.run(query.result)
   }
 
-  def createProject(projectName:String, owner:String):Future[Int] = {
+  def createProject(projectName:String, owner:String):Future[Try[Int]] = {
     val usr = getUser(owner)
-    Await.result(usr, Duration.Inf) match {
-      case Some(x) => {
-        val projectId:Int =
-          Await.result(db.run((projects returning projects.map( _.id )) += Project(0, projectName))
-            ,Duration.Inf)
+    lazy val res =  {
+        Await.result(usr, Duration.Inf) match {
+        case Some(_) => {
+          val projectId:Int =
+            Await.result(db.run((projects returning projects.map( _.id )) += Project(0, projectName))
+              ,Duration.Inf)
 
-        db.run(collaborations += Collaborates(projectId, owner, Level.Owner)).map(_ => projectId)
+          db.run(collaborations += Collaborates(projectId, owner, Level.Owner)).map(_ => projectId)
+        }
+        case _ => throw new Exception("username not found.")
       }
-      case _ => throw new Exception("username not found.")
     }
-  }
+
+    val x = Await.result(usersProjects(owner), Duration.Inf).find(p => p._1.name == projectName && p._2 == Level.Owner )
+
+    x match {
+      case Some(_) => Future{ Failure { new Exception("Du har allerede et projekt med dette navn.") } }
+      case _ => res.map(x => Success(x))
+    }
+
+    }
 
 }

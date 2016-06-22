@@ -1,7 +1,7 @@
 export class Project {
     constructor(
-    public id: Number,
-    public name: String) {}
+    public id: number,
+    public name: string) {}
 }
 
-export type ProjectWrapper = [Project, String, String];
+export type ProjectWrapper = [Project, string, string];
