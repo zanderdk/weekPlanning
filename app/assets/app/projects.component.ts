@@ -1,15 +1,15 @@
-///<reference path="../../../target/web/public/main/lib/angular__core/index.d.ts"/>
 import {Component, OnInit, Inject} from "@angular/core"
 import {ProjectService} from "./services/project.service"
 import {ProjectWrapper} from "./services/projectClasses"
 import {ProjectFilter} from "./projectFilter"
-import { ROUTER_DIRECTIVES } from "angular2/router"
+import { ROUTER_DIRECTIVES } from "@angular/router"
 
 @Component({
     selector: "projects",
     templateUrl: "assets/app/projects.html",
     pipes: [ProjectFilter],
-    bindings: [ProjectService]
+    bindings: [ProjectService],
+    directives: [ROUTER_DIRECTIVES]
 })
 
 export default class ProjectsComponent implements OnInit {

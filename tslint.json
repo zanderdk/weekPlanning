@@ -30,7 +30,7 @@
       "check-space"
     ],
     "indent": [
-      true,
+      false,
       "spaces"
     ],
     "no-duplicate-variable": false,
@@ -39,12 +39,12 @@
     "no-trailing-whitespace": false,
     "no-var-keyword": true,
     "one-line": [
-      true,
+      false,
       "check-open-brace",
       "check-whitespace"
     ],
     "quotemark": [
-      true,
+      false,
       "double"
     ],
     "triple-equals": [
