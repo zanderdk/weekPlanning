@@ -3,8 +3,10 @@ package service
 import weekplanning.model.{User, UserTableDef}
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.{Failure, Success, Try}
 
 trait UserService {
 
@@ -15,14 +17,16 @@ trait UserService {
     db.run(users.schema.create)
   }
 
-  def addUser(user: User): Future[String] = {
-    db.run(users += user).map(res => "User successfully added").recover {
-      case ex: Exception => ex.getCause.getMessage
+  def addUser(user: User): Future[Try[String]] = {
+    db.run(users += user).map(res => Success("ok")).recover {
+      case ex: Exception => Failure(ex)
     }
   }
 
-  def deleteUser(username: String): Future[Int] = {
-    db.run(users.filter(_.username === username).delete)
+  def deleteUser(username: String): Future[Try[Int]] = {
+    db.run(users.filter(_.username === username).delete).map(res => Success(res)).recover{
+      case ex: Exception => Failure(ex)
+    }
   }
 
   def getUser(username: String): Future[Option[User]] = {

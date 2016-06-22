@@ -9,6 +9,7 @@ import weekplanning.model.User
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+import scala.util.{Failure, Success}
 
 class Auth extends Controller {
 
@@ -66,8 +67,11 @@ class Auth extends Controller {
       formWithErrors => BadRequest(views.html.signin(Global.name)),
       user => {
         val usr = Function.tupled( User.apply(_ : String, _ : String, _ : String, true, false) )(user)
-        DAL.addUser(usr)
-        Redirect(routes.Application.index).withSession(Security.username -> user._1)
+        Await.result(DAL.addUser(usr), Duration.Inf) match {
+          case Failure(ex) => Ok(ex.getCause.getMessage)
+          case Success(x) =>
+            Redirect(routes.Application.index).withSession(Security.username -> user._1)
+        }
       }
     )
   }

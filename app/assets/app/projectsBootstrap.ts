@@ -1,5 +1,7 @@
 import {bootstrap} from "angular2/platform/browser"
-import ProjectComponent from "./projects"
-// import {provide} from "angular2/core"
+import ProjectListComponent from "./projects"
+import { HTTP_PROVIDERS } from "angular2/http"
 
-bootstrap(ProjectComponent)
+import "./rxjs-operators"
+
+bootstrap(ProjectListComponent, [HTTP_PROVIDERS])
