@@ -1,24 +1,9 @@
 @(title: String, activeName: String, lst:Seq[(String, String)])(content: Html)
 
 @page(title, activeName, lst) {
-    <script>    @* our app is downloaded as individual javascript files by SystemJs
-                 after compilation by sbt-typescript*@
-            System.config({
-                packages: {
-                    '@{"assets/app"}': {
-                        defaultExtension: 'js'
-                    },
-                    'assets/lib': {
-                        defaultExtension: 'js'
-                    }
-                },
-                map: {
-                    'app' : 'assets/app' @* play standardly publishes our asset files under /assets *@
-                }
+    <script src="@routes.Assets.at("javascripts/systemjs.config.js")"></script>
 
-
-            });
-            @* SystemJs works out which other modules our bootstrap module depends on and will download and load them*@
+    <script>
         System.import('app/main')
                 .catch(console.error.bind(console));
     </script>

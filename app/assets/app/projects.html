@@ -16,16 +16,16 @@
               <td><a href="#">{{pro[0].name}}</a></td>
               <td>
                 <div href="#" [ngSwitch]="pro[1]">
-                    <div *ngSwitchWhen="'Owner'">Ejer</div>
-                    <div *ngSwitchWhen="'Write'">Kan ændre</div>
-                    <div *ngSwitchWhen="'Read'">Kan læse</div>
+                    <div *ngSwitchCase="'Owner'">Ejer</div>
+                    <div *ngSwitchCase="'Write'">Kan ændre</div>
+                    <div *ngSwitchCase="'Read'">Kan læse</div>
                 </div>
               </td>
               <td>{{pro[2]}}</td>
               <td>
                 <div href="#" [ngSwitch]="pro[1]">
-                    <div *ngSwitchWhen="'Owner'"><a href="#">Ændre</a></div>
-                    <div *ngSwitchWhen="'Write'"><a href="#">Ændre</a></div>
+                    <div *ngSwitchCase="'Owner'"><a href="#">Ændre</a></div>
+                    <div *ngSwitchCase="'Write'"><a href="#">Ændre</a></div>
                     <div *ngSwitchDefault></div>
                 </div>
               </td>

@@ -1,12 +1,12 @@
-import { Injectable }     from "angular2/core"
-import { Http, Response } from "angular2/http"
-import { Headers, RequestOptions } from "angular2/http"
+import { Injectable, Inject } from "@angular/core"
+import { Http, Response } from "@angular/http"
+import { Headers, RequestOptions } from "@angular/http"
 import {ProjectWrapper} from "./projectClasses"
 
 
 @Injectable()
 export class ProjectService {
-    constructor(private http:Http) { }
+    constructor(@Inject(Http) private http:Http) { }
 
     private projectsUrl = "/getProjectList"
 
