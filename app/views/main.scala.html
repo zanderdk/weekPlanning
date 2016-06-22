@@ -4,17 +4,25 @@
 
 <html>
   <head>
+    <base href=".">
     <title>@title</title>
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
     <link rel="stylesheet" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
     <script src="@routes.Assets.at("javascripts/jquery-2.2.4.min.js")"></script>
     <script src="@routes.Assets.at("javascripts/bootstrap.min.js")"></script>
-    <script src='@routes.Assets.versioned("lib/angular2/bundles/angular2-polyfills.js")'></script>
     <script src='@routes.Assets.versioned("lib/systemjs/dist/system.js")'></script>
     <script src='@routes.Assets.versioned("lib/rxjs/bundles/Rx.js")'></script>
+    <script src='@routes.Assets.versioned("lib/angular2/bundles/angular2-polyfills.js")'></script>
     <script src='@routes.Assets.versioned("lib/angular2/bundles/angular2.dev.js")'></script>
     <script src='@routes.Assets.versioned("lib/angular2/bundles/http.dev.js")'></script>
+
+@*    <script src='@routes.Assets.versioned("lib/angular__http/bundles/http.umd.js")'></script>
+    <script src='@routes.Assets.versioned("lib/angular__router/bundles/router.umd.js")'></script>
+    <script src='@routes.Assets.versioned("lib/angular__core/bundles/core.umd.js")'></script>
+    <script src='@routes.Assets.versioned("lib/angular__platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js")'></script>
+    <script src='@routes.Assets.versioned("lib/zcourts-angular-master/tools/build/webpack/angular2-all.umd.js")'></script>*@
+
   </head>
   <body>
     @content

@@ -1,4 +1,4 @@
-@(title: String, activeName: String, lst:Seq[(String, String)], bootstrapFile: String)(content: Html)
+@(title: String, activeName: String, lst:Seq[(String, String)])(content: Html)
 
 @page(title, activeName, lst) {
     <script>    @* our app is downloaded as individual javascript files by SystemJs
@@ -19,7 +19,7 @@
 
             });
             @* SystemJs works out which other modules our bootstrap module depends on and will download and load them*@
-        System.import('@{"app/"+bootstrapFile}')
+        System.import('app/main')
                 .catch(console.error.bind(console));
     </script>
     @content

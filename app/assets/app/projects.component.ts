@@ -1,7 +1,8 @@
 import {Component, OnInit} from "angular2/core"
 import {ProjectService} from "./services/project.service"
-import {ProjectWrapper} from "./services/projectClasses";
-import {ProjectFilter} from "./projectFilter";
+import {ProjectWrapper} from "./services/projectClasses"
+import {ProjectFilter} from "./projectFilter"
+// import { ROUTER_DIRECTIVES } from "angular2/router"
 
 @Component({
     selector: "projects",
@@ -10,7 +11,7 @@ import {ProjectFilter} from "./projectFilter";
     bindings: [ProjectService]
 })
 
-export default class ProjectListComponent implements OnInit {
+export default class ProjectsComponent implements OnInit {
     private projects: ProjectWrapper[] = []
     private name: string = ""
 

@@ -17,6 +17,14 @@ libraryDependencies ++= Seq(
 
   "org.postgresql" % "postgresql" % "9.4-1206-jdbc42",
   "org.webjars.npm" % "angular2" % "2.0.0-beta.17",
+/*  "org.webjars.npm" % "zcourts-angular-master" % "2.0.0-rc.2-master",
+  "org.webjars.npm" % "angular__common" % "2.0.0-rc.2",
+  "org.webjars.npm" % "angular__compiler" % "2.0.0-rc.2",
+  "org.webjars.npm" % "angular__core" % "2.0.0-rc.2",
+  "org.webjars.npm" % "angular__platform-browser" % "2.0.0-rc.2",
+  "org.webjars.npm" % "angular__router" % "3.0.0-alpha.7",
+  "org.webjars.npm" % "angular__upgrade" % "2.0.0-rc.2",
+  "org.webjars.npm" % "angular__http" % "2.0.0-rc.3",*/
   "org.webjars.npm" % "systemjs" % "0.19.26",
   "org.webjars.npm" % "todomvc-common" % "1.0.2",
   "org.webjars.npm" % "rxjs" % "5.0.0-beta.7",
