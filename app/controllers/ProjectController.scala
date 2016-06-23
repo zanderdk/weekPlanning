@@ -41,23 +41,27 @@ class ProjectController extends Controller with Secured {
     )
   }
 
-
-
   def updateProject() = withAuth { username => implicit request =>
     updateProjcetForm.bindFromRequest.fold(
       formWithErrors => Ok("error"),
       pro => {
         val (id, name) = pro
+        val projectWithSameName = Await.result(DAL.usersProjects(username), Duration.Inf).find {
+          case (p, Level.Owner) => p.name == name
+          case _ => false
+        }.map(_ => "Du har allerede et projekt med dette navn.")
         val canEdit:Boolean = Await.result(DAL.usersProjects(username), Duration.Inf)
           .find {
             case (p, Level.Owner) => p.id == id
             case _ => false
           }.exists(_ => true)
         if (canEdit)
-        Await.result(DAL.updateProject(Project(id, name)),Duration.Inf) match {
-          case Failure(ex) => Ok(ex.getMessage)
-          case Success(_) => Ok("ok")
-       }
+          if (projectWithSameName.isEmpty) {
+            Await.result(DAL.updateProject(Project(id, name)), Duration.Inf) match {
+              case Failure(ex) => Ok(ex.getMessage)
+              case Success(_) => Ok("ok")
+            }
+          } else { Ok(projectWithSameName.get) }
         else { Ok("du kan ikke ændre dette projekt") }
       }
     )
