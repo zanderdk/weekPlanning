@@ -1,6 +1,6 @@
 package weekplanning.controllers
 
-import models.Level
+import models.{Level, Project}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.Json
@@ -9,7 +9,7 @@ import service.DAL
 import models.Project.projectFormats
 import service.JsonConverters.tuple3Writes
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Awaitable}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
@@ -18,6 +18,13 @@ class ProjectController extends Controller with Secured {
   val addProjcetForm = Form(
     single(
       "projectName" -> text
+    )
+  )
+
+  val updateProjcetForm = Form(
+    tuple(
+      "id" -> number,
+      "name" -> text
     )
   )
 
@@ -34,9 +41,38 @@ class ProjectController extends Controller with Secured {
     )
   }
 
-  def getProject(projectId: Int) = withAuth { username => implicit request =>
+
+
+  def updateProject() = withAuth { username => implicit request =>
+    updateProjcetForm.bindFromRequest.fold(
+      formWithErrors => Ok("error"),
+      pro => {
+        val (id, name) = pro
+        val canEdit:Boolean = Await.result(DAL.usersProjects(username), Duration.Inf)
+          .find {
+            case (p, Level.Owner) => p.id == id
+            case _ => false
+          }.exists(_ => true)
+        if (canEdit)
+        Await.result(DAL.updateProject(Project(id, name)),Duration.Inf) match {
+          case Failure(ex) => Ok(ex.getMessage)
+          case Success(_) => Ok("ok")
+       }
+        else { Ok("du kan ikke ændre dette projekt") }
+      }
+    )
+  }
+
+  def deleteProject(id: Int) = withAuth { username => implicit request =>
+    Await.result(DAL.deleteProject(id), Duration.Inf) match {
+      case Success(_) => Ok("ok")
+      case _ => Ok("error")
+    }
+  }
+
+  def getProject(id: Int) = withAuth { username => implicit request =>
     val project = Await.result(DAL.usersProjects(username), Duration.Inf)
-      .filter{ case(p, l) => (l == Level.Owner || l == Level.Write) && p.id == projectId
+      .filter{ case(p, l) => (l == Level.Owner || l == Level.Write) && p.id == id
       }.map(_._1).headOption
 
     project match {

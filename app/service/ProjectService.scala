@@ -71,6 +71,20 @@ trait ProjectService {
    db.run(query.result)
   }
 
+  def deleteProject(id: Int): Future[Try[Int]] = {
+    db.run(projects.filter(_.id === id).delete).map(res => Success(res)).recover{
+      case ex: Exception => Failure(ex)
+    }
+  }
+
+  def updateProject(project: Project): Future[Try[Int]] = {
+    val q = for { p <- projects if p.id === project.id } yield p.name
+    val updateAction = q.update(project.name)
+    try{ db.run(updateAction).map(Success(_)) } catch {
+      case e:Exception => Future { Failure { e } }
+    }
+  }
+
   def createProject(projectName:String, owner:String):Future[Try[Int]] = {
     val usr = getUser(owner)
     lazy val res =  {

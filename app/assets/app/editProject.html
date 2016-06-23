@@ -1,14 +1,14 @@
 <form>
   <div class="control-group">
     <label>Projekt navn</label>
-    <input [(ngModel)]="name" type="text" class="form-control">
-    <span [class.hidden]="name.length > 0" class="help-inline"> Navn skal udfyldes.<br/></span>
+    <input [(ngModel)]="project.name" type="text" class="form-control">
+    <span [class.hidden]="project.name.length > 0" class="help-inline"> Navn skal udfyldes.<br/></span>
   </div>
   <br/>
-  <div [class.hidden]="error.length == 0" class="alert alert-danger" id="error">
+  <div [class.hidden]="error.length == 0" class="alert alert-danger">
     {{error}}
   </div>
   <a [routerLink]="['/projects']" class="btn btn-default">Anuller</a>
-  <button [disabled]="name.length <= 0" (click)="save()" class="btn btn-primary">Gem</button>
-  <button [class.hidden]="!edit" class="btn btn-danger">Slet</button>
+  <button [disabled]="project.name.length <= 0" (click)="save()" class="btn btn-primary">Gem</button>
+  <button [class.hidden]="!edit" (click)="delete()" class="btn btn-danger">Slet</button>
 </form>
