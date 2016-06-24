@@ -1,4 +1,4 @@
-package models
+package weekplanning.models
 
 import play.api.libs.json.Json
 import slick.driver.PostgresDriver.api._

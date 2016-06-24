@@ -1,6 +1,5 @@
 package weekplanning.controllers
 
-import models.Level
 import play.api.mvc
 import play.api.mvc.{Action, Controller}
 import service.DAL

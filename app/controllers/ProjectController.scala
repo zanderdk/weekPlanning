@@ -1,17 +1,17 @@
 package weekplanning.controllers
 
-import models.{Level, Project}
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc._
 import service.DAL
-import models.Project.projectFormats
 import service.JsonConverters.tuple3Writes
+import weekplanning.models.{Level, Project}
 
 import scala.concurrent.{Await, Awaitable}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
+import weekplanning.models.{Level, Project}
 
 class ProjectController extends Controller with Secured {
 
@@ -27,6 +27,10 @@ class ProjectController extends Controller with Secured {
       "name" -> text
     )
   )
+
+  def canEdit(id: Int, username:String) = Await.result(DAL.usersProjects(username), Duration.Inf)
+      .find(_._1.id == id)
+      .exists(_ => true)
 
   def addProject = withAuth { username => implicit request =>
     addProjcetForm.bindFromRequest.fold(
@@ -67,10 +71,23 @@ class ProjectController extends Controller with Secured {
     )
   }
 
+  def getCollaborators(id: Int) = withAuth { username => implicit request =>
+    if(canEdit(id, username)) {
+      val users = Await.result(DAL.getCollaborators(id), Duration.Inf)
+        .filter(_.username != username)
+      Ok(Json.toJson(users))
+    } else {
+      Ok("Du har ikke retigheder til at ændre dette projekt.")
+    }
+  }
+
   def deleteProject(id: Int) = withAuth { username => implicit request =>
-    Await.result(DAL.deleteProject(id), Duration.Inf) match {
+    if(canEdit(id, username)) {Await.result(DAL.deleteProject(id), Duration.Inf) match {
       case Success(_) => Ok("ok")
       case _ => Ok("error")
+    }}
+    else {
+      Ok("Du har ikke retigheder til at ændre dette projekt.")
     }
   }
 

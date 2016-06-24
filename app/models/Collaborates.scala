@@ -1,6 +1,5 @@
-package models
+package weekplanning.models
 
-import models.Level.Level
 import slick.driver.PostgresDriver.api._
 import weekplanning.model.UserTableDef
 
@@ -18,21 +17,21 @@ object Level extends Enumeration {
 }
 
 
-case class Collaborates (projectId:Int, userName:String, level:Level)
+case class Collaborates (projectId:Int, userId:Int, level:Level.Level)
 
 class CollaboratesTabelDef(tag: Tag) extends Table[Collaborates](tag, "collaborates") {
 
   import Level._
 
   def projectId = column[Int]("id")
-  def username = column[String]("username")
+  def userId = column[Int]("userId")
   def level = column[Level]("level")
 
   def fkToProject = foreignKey("project_fk", projectId, TableQuery[ProjectTableDef])(_.id, onUpdate = ForeignKeyAction.Cascade, onDelete = ForeignKeyAction.Cascade)
-  def fkToUser = foreignKey("user_fk", username, TableQuery[UserTableDef])(_.username, onUpdate = ForeignKeyAction.Cascade, onDelete = ForeignKeyAction.Cascade)
+  def fkToUser = foreignKey("user_fk", userId, TableQuery[UserTableDef])(_.id, onUpdate = ForeignKeyAction.Cascade, onDelete = ForeignKeyAction.Cascade)
 
-  def pk = primaryKey("pk", (projectId, username))
+  def pk = primaryKey("pk", (projectId, userId))
 
   override def * =
-    (projectId, username, level) <>(Collaborates.tupled, Collaborates.unapply)
+    (projectId, userId, level) <>(Collaborates.tupled, Collaborates.unapply)
 }

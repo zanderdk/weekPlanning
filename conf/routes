@@ -11,6 +11,7 @@ GET     /logout                     weekplanning.controllers.Auth.logout
 GET     /checkUsername              weekplanning.controllers.Auth.checkUsernameAndEmail(username: String, email: String)
 GET     /getProject                 weekplanning.controllers.ProjectController.getProject(id: Int)
 GET     /deleteProject              weekplanning.controllers.ProjectController.deleteProject(id: Int)
+GET     /collaborators              weekplanning.controllers.ProjectController.getCollaborators(id: Int)
 
 
 POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
