@@ -9,7 +9,9 @@
             <th>Synlighed</th>
             <th>Ejer</th>
             <th>
-                <a [routerLink]="['/editProject', 0]">Tilføj</a>
+                <a [routerLink]="['/editProject', 0]">
+                    <span class="octicon octicon-plus"></span>
+                </a>
           </tr>
         </thead>
         <tbody>
@@ -26,7 +28,7 @@
               <td>
                 <div href="#" [ngSwitch]="pro[1]">
                     <div *ngSwitchCase="'Owner'">
-                        <a [routerLink]="['/editProject', pro[0].id]">Ændre</a>
+                        <a [routerLink]="['/editProject', pro[0].id]"><span class="octicon octicon-pencil"></span></a>
                     </div>
                     <div *ngSwitchDefault></div>
                 </div>

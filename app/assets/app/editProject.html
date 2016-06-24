@@ -2,13 +2,30 @@
   <div class="control-group">
     <label>Projekt navn</label>
     <input [(ngModel)]="project.name" type="text" class="form-control">
-    <span [class.hidden]="project.name.length > 0" class="help-inline"> Navn skal udfyldes.<br/></span>
+    <span [hidden]="project.name.length > 0"> Navn skal udfyldes.<br/></span>
   </div>
+<!--  <br/>
+    <ul class="list-group">
+      <li class="list-group-item">
+        <span class="label label-default label-pill pull-xs-right">14</span>
+        Cras justo odio
+      </li>
+      <li class="list-group-item">
+        <span class="label label-default label-pill pull-xs-right">2</span>
+        Dapibus ac facilisis in
+      </li>
+      <li class="list-group-item">
+        <span class="label label-default label-pill pull-xs-right">1</span>
+        Morbi leo risus
+      </li>
+    </ul>-->
   <br/>
-  <div [class.hidden]="error.length == 0" class="alert alert-danger">
+  <div [hidden]="error.length == 0" class="alert alert-danger">
     {{error}}
   </div>
-  <a [routerLink]="['/projects']" class="btn btn-default">Anuller</a>
-  <button [disabled]="project.name.length <= 0" (click)="save()" class="btn btn-primary">Gem</button>
-  <button [class.hidden]="!edit" (click)="delete()" class="btn btn-danger">Slet</button>
+  <div class="btn-group">
+      <button (click)="cancel()" type="button" class="btn btn-default">Anuller</button>
+      <button [hidden]="!edit" (click)="delete()" type="button" class="btn btn-danger">Slet</button>
+      <button [disabled]="project.name.length <= 0" (click)="save()" type="button" class="btn btn-primary">Gem</button>
+  </div>
 </form>

@@ -50,6 +50,11 @@ export default class EditProjectComponent implements OnInit, OnDestroy {
         }
     }
     
+    private cancel() {
+        let link = ['/projects'];
+        this.router.navigate(link);        
+    }
+    
     private delete() {
         this.projectService.delete(this.project.id).then(res => {
             if(res !== "ok") { this.error = res } else { 
