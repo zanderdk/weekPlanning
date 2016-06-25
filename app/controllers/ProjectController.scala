@@ -5,9 +5,13 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc._
 import service.DAL
-import service.JsonConverters.tuple3Writes
+import service.JsonConverters._
+import weekplanning.model.User
+import weekplanning.model.User.userFormat
 import weekplanning.models.{Level, Project}
-
+import weekplanning.models.Level.{Level, stringToLevel}
+import service.JsonConverters.tuple2Reads
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{Await, Awaitable}
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
@@ -15,9 +19,9 @@ import weekplanning.models.{Level, Project}
 
 class ProjectController extends Controller with Secured {
 
-  val addProjcetForm = Form(
+  val singleForm = Form(
     single(
-      "projectName" -> text
+      "data" -> text
     )
   )
 
@@ -33,13 +37,15 @@ class ProjectController extends Controller with Secured {
       .exists(_ => true)
 
   def addProject = withAuth { username => implicit request =>
-    addProjcetForm.bindFromRequest.fold(
+    singleForm.bindFromRequest.fold(
       formWithErrors => Ok("error"),
       projectName => {
         val x = Await.result(DAL.createProject(projectName, username), Duration.Inf)
         x match {
           case Failure(ex) => Ok(ex.getMessage)
-          case Success(_) => Ok("ok")
+          case Success(x) => {
+            Ok(x.toString)
+          }
         }
       }
     )
@@ -71,10 +77,52 @@ class ProjectController extends Controller with Secured {
     )
   }
 
+  def updateCollaborators() = withAuth { username => implicit request =>
+     singleForm.bindFromRequest.fold(
+      formWithErrors => Ok("error"),
+       jsonString => {
+         val json = Json.parse(jsonString)
+         val id = (json \ "id").as[Int]
+         val users:Seq[(User, Level)] = (json \ "lst").as[Seq[(User, String)]]
+           .map(x => {
+             val level = stringToLevel(x._2)
+             (x._1, level)
+           })
+
+         val multipleOfSameUser = users.map(_._1.id).toSet.size != users.map(_._1.id).size
+         if(multipleOfSameUser) { Ok("Du kan ikke samarbejde med den samme bruger flere gange") }
+         else {
+         Await.result(DAL.usersProjects(username), Duration.Inf)
+              .find( x => x._1.id == id)
+         match {
+           case Some((pro, Level.Owner)) => {
+             val usr = Await.result(DAL.getUser(username), Duration.Inf)
+
+             usr match {
+               case Some(x) => {
+                 val lst:Seq[(User, Level)] = users :+ (x, Level.Owner)
+                 Await.result(DAL.updateProjectCollaborators(id, lst), Duration.Inf)
+                   match {
+                   case Success(_) => { Ok("ok") }
+                   case Failure(z) => Ok(z.getMessage)
+                 }
+               }
+               case _ => Ok("error")
+             }
+           }
+           case None => Ok("du har ikke retighed til at ændre dette projekt")
+         }
+         }
+      }
+    )
+  }
+
   def getCollaborators(id: Int) = withAuth { username => implicit request =>
     if(canEdit(id, username)) {
       val users = Await.result(DAL.getCollaborators(id), Duration.Inf)
-        .filter(_.username != username)
+        .filter(_._1.username != username).map(x => {
+        (x._1.copy(password = ""), x._2)
+      })
       Ok(Json.toJson(users))
     } else {
       Ok("Du har ikke retigheder til at ændre dette projekt.")
@@ -82,13 +130,15 @@ class ProjectController extends Controller with Secured {
   }
 
   def deleteProject(id: Int) = withAuth { username => implicit request =>
-    if(canEdit(id, username)) {Await.result(DAL.deleteProject(id), Duration.Inf) match {
-      case Success(_) => Ok("ok")
-      case _ => Ok("error")
-    }}
-    else {
-      Ok("Du har ikke retigheder til at ændre dette projekt.")
-    }
+      val k = for {
+        x <- DAL.deleteAllColaboratorsForProject(id)
+        y <- DAL.deleteProject(id)
+      } yield (x, y)
+      val res = Await.result(k, Duration.Inf)
+      res match {
+        case (Success(_), Success(_)) => Ok("ok")
+        case _ => Ok("error")
+      }
   }
 
   def getProject(id: Int) = withAuth { username => implicit request =>

@@ -4,15 +4,33 @@
     <input [(ngModel)]="project.name" type="text" class="form-control">
     <span [hidden]="project.name.length > 0"> Navn skal udfyldes.<br/></span>
   </div>
-  <br/>
-    <label>Samarbejdende Bruger</label>
-<!--    <ul class="list-group">
-      <li class="list-group-item">
-        <span class="label label-default label-pill pull-xs-right"><a href="#"></a><span class="octicon octicon-x"></span><a></a></span>
-        Cras justo odio
+    <div [hidden]="collaborators.length == 0">
+        <br/>
+        <label>Samarbejdende Bruger</label>
+    </div>
+    <ul class="list-group">
+      <li *ngFor="let user of collaborators" class="list-group-item">
+        <span class="label label-default label-pill pull-xs-right"><a (click)="removeCollaborator(user[0].id)" type="button" ><span class="octicon octicon-x"></span></a></span>
+        <div href="#" [ngSwitch]="user[1]">
+            <div *ngSwitchCase="'Write'">{{user[0].username}} kan <a (click)="flipUserAcces(user[0].id)">ændre.</a></div>
+            <div *ngSwitchCase="'Read'">{{user[0].username}} kan <a (click)="flipUserAcces(user[0].id)">læse.</a></div>
+        </div>
       </li>
-    </ul>-->
+    </ul>
   <br/>
+  <label>Tilføj samarbejdende bruger</label>
+    <br/>
+    <select class="js-example-basic-single form-control">
+        <option value=""></option>
+    </select>
+    <br/>
+    <div>
+        <input type="checkbox" [(ngModel)]="userWrite" />
+        <label><a (click)="flipFlag()">Denne bruger kan også ændre dette projekt</a></label>
+    </div>
+    <button type="button" [disabled]="selectedId == 0" (click)="addSelectedUser()" class="btn btn-primary">Tilføj bruger</button>
+    <br/>
+    <br/>
   <div [hidden]="error.length == 0" class="alert alert-danger">
     {{error}}
   </div>

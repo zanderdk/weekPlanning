@@ -9,7 +9,8 @@ object User{
   def tupled(tup:(String, String, String, Boolean, Boolean, Int)) : User =
     User(tup._1, tup._2, tup._3, tup._4, tup._5, tup._6)
 
-  implicit val projectFormats = Json.format[User]
+  implicit val userFormat = Json.format[User]
+
 }
 
 class UserTableDef(tag: Tag) extends Table[User](tag, "user") {

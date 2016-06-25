@@ -2,6 +2,7 @@ import { Injectable, Inject } from "@angular/core"
 import { Http, Response } from "@angular/http"
 import { Headers, RequestOptions } from "@angular/http"
 import { ProjectWrapper } from "./projectClasses"
+import { User, UserWrapper } from "./user.ts"
 
 
 @Injectable()
@@ -13,16 +14,31 @@ export class ProjectService {
     private addUrl = "/addProject"
     private deleteUrl = "/deleteProject"
     private updateUrl = "/updateProject"
+    private collaboratorsUrl = "/collaborators"
+
+    updateCollaborators(id: number, lst:UserWrapper[]) {
+        let body = JSON.stringify({ 'id': id, 'lst': lst });
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.collaboratorsUrl, { 'data': body }, options)
+            .toPromise()
+            .then(res => res.text())
+    }
+
+    getProjectCollaborators(id: number): Promise<UserWrapper> {
+        return this.http
+            .get(this.collaboratorsUrl+"?id="+id)
+            .toPromise().then(this.extractData)
+    }
 
     getProjects(): Promise<ProjectWrapper[]> {
-        return this.http.get(this.projectsUrl)
-          .toPromise()
+        return this.http.get(this.projectsUrl).toPromise()
           .then(this.extractData)
     }
     
     delete(id: number): Promise<string> {
-        return this.http
-            .get(this.deleteUrl+"?id="+id)
+        return this.http.get(this.deleteUrl+"?id="+id)
             .toPromise().then(res => res.text())
     }
     
@@ -34,7 +50,7 @@ export class ProjectService {
 
     addProject(projectName: string): Promise<string> {
         return this.http
-               .post(this.addUrl, {'projectName': projectName })
+               .post(this.addUrl, {'data': projectName })
                .toPromise().then(res => res.text())
     }
     

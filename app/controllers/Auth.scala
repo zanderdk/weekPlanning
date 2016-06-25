@@ -66,7 +66,8 @@ class Auth extends Controller {
      registerForm.bindFromRequest.fold(
       formWithErrors => BadRequest(views.html.signin(Global.name)),
       user => {
-        val usr = Function.tupled( User.apply(_ : String, _ : String, _ : String, true, false) )(user)
+        val us = (user._1.toLowerCase, user._2, user._3.toLowerCase)
+        val usr = Function.tupled( User.apply(_ : String, _ : String, _ : String, true, false) )(us)
         Await.result(DAL.addUser(usr), Duration.Inf) match {
           case Failure(ex) => Ok(ex.getCause.getMessage)
           case Success(x) =>

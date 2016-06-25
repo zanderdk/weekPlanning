@@ -73,12 +73,22 @@ trait ProjectService {
     }
   }
 
-  def getCollaborators(id: Int): Future[Seq[User]] = {
+  def deleteAllColaboratorsForProject(id: Int): Future[Try[String]] = {
+    db.run(collaborations.filter(c => c.projectId === id).delete).map(_ => Success("ok"))
+  }
+
+  def updateProjectCollaborators(id: Int, lst:Seq[(User, Level)]) :
+  Future[Try[String]] = {
+    val colabs = lst.map(y => Collaborates(id, y._1.id, y._2))
+    db.run((collaborations.filter(_.projectId === id).delete).andThen(collaborations ++= colabs)).map(_ => Success("ok"))
+  }
+
+  def getCollaborators(id: Int): Future[Seq[(User, Level)]] = {
      val query = for {
       p <- projects
       c <- collaborations if p.id === c.projectId && c.projectId === id
       u <- users if c.userId === u.id
-    } yield u
+    } yield (u, c.level)
    db.run(query.result)
   }
 

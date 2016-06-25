@@ -14,6 +14,15 @@ object Level extends Enumeration {
     e => e.id,
     s => Level(s)
   )
+
+  val stringToLevel: Map[String, Level] = Map(
+      "Owner" -> Level.Owner,
+      "Write" -> Level.Write,
+      "Read" -> Level.Read
+    )
+
+  val levelToString = stringToLevel.map(_.swap)
+
 }
 
 
