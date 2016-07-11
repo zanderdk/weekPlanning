@@ -2,7 +2,6 @@ package service
 
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
-
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
@@ -59,6 +58,14 @@ trait ProjectService {
     }
   }
 
+  def getUserLevel(projectId: Int, username: String): Future[Option[Level]] = {
+    val query = for {
+      u <- users if u.username === username
+      c <- collaborations if u.id === c.userId
+    } yield c.level
+    db.run(query.result.headOption)
+  }
+
 
   def userProjectsAndOwner(username:String) : Future[Seq[(Project, Level, String)]] = Future { //todo: lav til en query
    val lst = Await.result(usersProjects(username), Duration.Inf)
@@ -82,6 +89,7 @@ trait ProjectService {
     val colabs = lst.map(y => Collaborates(id, y._1.id, y._2))
     db.run((collaborations.filter(_.projectId === id).delete).andThen(collaborations ++= colabs)).map(_ => Success("ok"))
   }
+
 
   def getCollaborators(id: Int): Future[Seq[(User, Level)]] = {
      val query = for {

@@ -5,9 +5,9 @@ import play.api.mvc.Controller
 import service.DAL
 import weekplanning.controllers.Secured
 import weekplanning.model.User
-
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
+
 
 class UserController extends Controller with Secured {
 
@@ -23,6 +23,16 @@ class UserController extends Controller with Secured {
       val users: Seq[User] = Seq()
       Ok(Json.toJson(users))
     }
+  }
+
+  def getVisability(id: Int) = withAuth { username => implicit request =>
+    val viability = Await.result(DAL.usersProjects(username), Duration.Inf)
+        .find(p => p._1.id == id).map(x => x._2)
+    val str = viability match {
+      case Some(x) => x.toString
+      case _=> "Dette projekt findes ikke"
+    }
+    Ok(str)
   }
 
   def getUserById(id: Int) = withAuth { username => implicit request =>

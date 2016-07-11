@@ -15,7 +15,11 @@ GET     /collaborators              weekplanning.controllers.ProjectController.g
 POST    /collaborators              weekplanning.controllers.ProjectController.updateCollaborators
 GET     /searchUsers                weekplanning.controllers.UserController.searchUsers
 GET     /getUserById                weekplanning.controllers.UserController.getUserById(id: Int)
-
+GET     /getViability               weekplanning.controllers.UserController.getVisability(id: Int)
+GET     /coworkers                  weekplanning.controllers.CoworkerController.getCoworkers(id: Int)
+GET     /coworkersAdd               weekplanning.controllers.CoworkerController.addCoworkers(id:Int, name:String)
+GET     /updateCoworker             weekplanning.controllers.CoworkerController.updateCoworker(id: Int, oldName: String, name: String)
+GET     /deleteCoworker             weekplanning.controllers.CoworkerController.deleteCoworker(id: Int, name: String)
 
 POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
 POST    /authenticate               weekplanning.controllers.Auth.authenticate

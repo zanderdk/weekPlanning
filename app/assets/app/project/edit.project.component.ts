@@ -1,14 +1,14 @@
 import {Component, OnInit, Inject, OnDestroy } from "@angular/core"
-import {ProjectService} from "./services/project.service"
+import {ProjectService} from "../services/project.service"
 import { ROUTER_DIRECTIVES } from "@angular/router"
 import { Router, ActivatedRoute } from "@angular/router"
-import {Project} from "./services/projectClasses";
-import { User, UserWrapper } from "./services/user"
-import { UserService } from "./services/userService"
+import {Project} from "../services/projectClasses";
+import { User, UserWrapper } from "../services/userClasses"
+import { UserService } from "../services/user.service"
 
 @Component({
     selector: "addProject",
-    templateUrl: "assets/app/editProject.html",
+    templateUrl: "assets/app/project/editProject.html",
     bindings: [ProjectService],
     directives: [ROUTER_DIRECTIVES]
 })
@@ -72,13 +72,24 @@ export default class EditProjectComponent implements OnInit, OnDestroy  {
     private save() {
         if(!this.edit) {
             this.projectService.addProject(this.project.name).then(res => {
-                this.project.id = +res
-                this.updateCollaborators()
+                if(res !== "ok")
+                {
+                    if(isNaN(+res)){
+                        this.error = res
+                    }
+                    else {
+                         this.project.id = +res
+                        this.updateCollaborators()                       
+                    }
+                } else {
+                    this.project.id = +res
+                    this.updateCollaborators()
+                }
             })
         } else {
             if(this.project.name !== this.initName) {
                 this.projectService.updateProject(this.project).then(res => {
-                    if (res === "ok") {
+                    if (res !== "ok") {
                         this.error = res
                     } else {
                         this.updateCollaborators()

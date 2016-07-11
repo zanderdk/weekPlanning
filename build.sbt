@@ -61,4 +61,6 @@ resolveFromWebjarsNodeModulesDir := true
 // use the combined tslint and eslint rules plus ng2 lint rules
 (rulesDirectories in tslint) := Some(List(tslintEslintRulesDir.value,ng2LintRulesDir.value))
 
+tsCodesToIgnore := List(canNotFindModule, 7006, 2339, 2322, 2345, 2304, 2339, 6053, 7022)
+
 fork in run := true

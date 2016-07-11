@@ -21,7 +21,7 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
 
-    "no-empty": true, /* this is an eslint rule */
+    "no-empty": false, /* this is an eslint rule */
 
     /* the following rules are tslint rules */
     "class-name": true,

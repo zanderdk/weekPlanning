@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@angular/core"
 import { Http, Response } from "@angular/http"
 import { Headers, RequestOptions } from "@angular/http"
 import { ProjectWrapper } from "./projectClasses"
-import { User, UserWrapper } from "./user.ts"
+import { User, UserWrapper } from "./userClasses.ts"
 
 
 @Injectable()

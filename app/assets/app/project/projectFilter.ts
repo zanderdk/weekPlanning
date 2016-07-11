@@ -1,5 +1,5 @@
 import {Pipe, PipeTransform} from "@angular/core"
-import {ProjectWrapper} from "./services/projectClasses";
+import {ProjectWrapper} from "../services/projectClasses";
 
 @Pipe({ name: "projectFilter" })
 export class ProjectFilter implements PipeTransform {
