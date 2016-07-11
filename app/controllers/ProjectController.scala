@@ -130,16 +130,26 @@ class ProjectController extends Controller with Secured {
   }
 
   def deleteProject(id: Int) = withAuth { username => implicit request =>
-      val k = for {
-        x <- DAL.deleteAllColaboratorsForProject(id)
-        y <- DAL.deleteProject(id)
-      } yield (x, y)
-      val res = Await.result(k, Duration.Inf)
-      res match {
-        case (Success(_), Success(_)) => Ok("ok")
-        case _ => Ok("error")
+   val canEdit:Boolean = Await.result(DAL.usersProjects(username), Duration.Inf)
+          .find {
+            case (p, Level.Owner) => p.id == id
+            case _ => false
+          }.exists(_ => true)
+
+      if(canEdit) {
+        val k = for {
+          x <- DAL.deleteAllColaboratorsForProject(id)
+          y <- DAL.deleteProject(id)
+        } yield (x, y)
+        val res = Await.result(k, Duration.Inf)
+        res match {
+          case (Success(_), Success(_)) => Ok("ok")
+          case _ => Ok("error")
+        }
+      } else {
+        Ok("Du har ikke retigheder til at ændre dette projket.")
       }
-  }
+  } //todo fix så den slætter alt
 
   def getProject(id: Int) = withAuth { username => implicit request =>
     val project = Await.result(DAL.usersProjects(username), Duration.Inf)

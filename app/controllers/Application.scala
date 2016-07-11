@@ -18,12 +18,8 @@ class Application extends Controller with Secured {
     DAL.createProjectSchema()
     DAL.createCollaboratesSchema()
     DAL.createCoworkerSchema() */
-
-    Await.result(DAL.addCoworker(Coworker(0, 32, "zander")), Duration.Inf) match {
-      case Success(_) => Ok("ok")
-      case Failure(ex) => Ok(ex.getMessage)
-    }
-/*    Ok("schema created.")*/
+    DAL.createWorkTypeSchema()
+    Ok("schema created.")
   }
 
   def index = withAuth { username => implicit request =>

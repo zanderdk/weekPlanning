@@ -5,20 +5,20 @@ import {MenuService} from "../services/menu.service"
 import {ProjectFilter} from "./projectFilter"
 import { ROUTER_DIRECTIVES } from "@angular/router"
 import { Router, ActivatedRoute } from "@angular/router"
-import {Coworker} from "../services/coworkerClasses"
-import {CoworkerService} from "../services/coworker.service"
+import {WorkType} from "../services/workTypeClasses"
+import {WorkTypeService} from "../services/workType.service"
 
 @Component({
     selector: "editCoworker",
-    templateUrl: "assets/app/coworkers/editCoworker.html",
+    templateUrl: "assets/app/workType/editWorkType.html",
     directives: [ROUTER_DIRECTIVES]
 })
 
-export default class EditCoworkersComponent implements OnInit {
+export default class EditWorkTypeComponent implements OnInit {
     private projectId: number = 0
     private visability: string = ""
     private sub: any
-    private name: string = ""
+    private work: WorkType = new WorkType(0, 0, "", 0.0)
     private menuService: MenuService
     private error: string = ""
     private coworkers: Coworker[] = []
@@ -29,47 +29,54 @@ export default class EditCoworkersComponent implements OnInit {
        if(res !== "ok") {
            this.error = res
        } else {
-           let link = ['/coworkers/' + this.projectId];
+           let link = ['/workTypes/' + this.projectId];
            this.router.navigate(link); 
        }
     }
 
     constructor (
-        @Inject(ProjectService) private projectService: ProjectService,
+        @Inject(WorkTypeService) private workTypeService: WorkTypeService,
         @Inject(UserService) private userService: UserService,
-        @Inject(CoworkerService) private coworkerService: CoworkerService,
         @Inject(Router) private router: Router,
         @Inject(ActivatedRoute) private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
-            let id = +params['id']
-            let name = (params['name'] === undefined)? "" : params['name']
-            this.projectId = id // (+) converts string 'id' to a number
-            this.name = name
-            this.initName = name
-            this.edit = (name === "")? false : true
+            let id = +params['projectId']
+            let workId = (params['workId'] === undefined)? 0 : +params['workId']
+            this.work.id = workId
+            this.edit = (workId === 0)? false : true
+            this.projectId = id
+            this.work.projectId = id
             this.userService.getUsersVisabilityForProject(this.projectId)
                 .then(res => {
                     this.viability = res
                 })
+            if(this.edit) {
+                this.workTypeService.getWorkType(workId).then(wo => {
+                    this.work = wo
+                }).catch(res => {
+                    this.error = res
+                })
+            }
         })
+    }
+    
+    save() {
+        if(!this.edit) {
+            this.workTypeService.addWorkType(this.work).then(res => this.check(res))
+        } else {
+            this.workTypeService.updateWorkType(this.work).then(res => this.check(res))
+        }
+    }
+    
+    delete() {
+        this.workTypeService.deleteWorkType(this.work.id).then(res => this.check(res))
     }
     
     cancel() {
         this.check("ok")
     }
-    
-    delete() {
-        this.coworkerService.deleteCoworker(this.projectId, this.initName).then(res => this.check(res))
-    }
-    
-    save() {
-        if(!this.edit) {
-            this.coworkerService.addCoworker(this.projectId, this.name).then(res => this.check(res))
-        } else {
-            this.coworkerService.updateCoworker(this.projectId, this.initName, this.name).then(res => this.check(res))
-        }
-    }
+
 
 }

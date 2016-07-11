@@ -29,8 +29,7 @@ trait ProjectService {
 
   def getProjectOwner(pId: Int): Future[Option[User]] = {
      val query = for {
-        p <- projects
-        c <- collaborations if p.id === c.projectId && c.projectId === p.id
+        c <- collaborations if c.projectId === pId
         u <- users if c.userId === u.id && c.level === Level.Owner
       } yield u
      db.run(query.result.headOption)
@@ -61,7 +60,7 @@ trait ProjectService {
   def getUserLevel(projectId: Int, username: String): Future[Option[Level]] = {
     val query = for {
       u <- users if u.username === username
-      c <- collaborations if u.id === c.userId
+      c <- collaborations if u.id === c.userId && c.projectId === projectId
     } yield c.level
     db.run(query.result.headOption)
   }

@@ -4,13 +4,13 @@ import play.api.libs.json.Json
 import slick.driver.PostgresDriver.api._
 
 case class Week(id: Int, ProjectId: Int, year: Int, weekNo: Int) {
-  def dayes = ???
+
 }
 
 object Week{
   def tupled(tup:(Int, Int, Int, Int)) : Week = Week(tup._1, tup._2, tup._3, tup._4)
 
-  implicit val weekFormats = Json.format[Week] //todo implement with days
+  implicit val weekFormats = Json.format[Week]
 }
 class WeekTableDef(tag: Tag) extends Table[Week](tag, "week") {
 

@@ -1,6 +1,6 @@
 package service
 
-import models.{Coworker, CoworkerTableDef}
+import models.{Coworker, CoworkerTableDef, WorkType}
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
 
@@ -15,14 +15,12 @@ import weekplanning.models._
 trait CoworkerService {
 
   val db:JdbcProfile#Backend#Database
-  val projects: TableQuery[ProjectTableDef]
-  val collaborations: TableQuery[CollaboratesTabelDef]
-  val users:TableQuery[UserTableDef]
   val coworkers = TableQuery[CoworkerTableDef]
 
   def createCoworkerSchema(): Unit ={
     db.run(coworkers.schema.create)
   }
+
 
   def updateCoworker(projectId: Int, oldName: String, name: String): Future[Try[String]] = {
     val q = for { c <- coworkers if c.name === oldName } yield c.name

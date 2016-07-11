@@ -1,0 +1,31 @@
+<input type="text" class="form-control search-query" [(ngModel)]="name" placeholder="Søg">
+
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Vagt typens navn</th>
+        <th>
+            Vagt typens tid
+        </th>
+        <th>
+            <a [routerLink]="['/editWorkType', projectId]">
+                <span class="octicon octicon-plus"></span>
+            </a>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let workType of (workTypes | workTypeFilter:name)">
+          <td>
+            {{workType.name}}
+          </td>
+          <td>
+              {{workType.time}}
+          </td>
+          <td>
+            <a [routerLink]="['/editWorkType', projectId, workType.id]"><span class="octicon octicon-pencil"></span></a>
+          </td>
+      </tr>
+      </tbody>
+  </table>
+</div>

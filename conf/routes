@@ -20,6 +20,11 @@ GET     /coworkers                  weekplanning.controllers.CoworkerController.
 GET     /coworkersAdd               weekplanning.controllers.CoworkerController.addCoworkers(id:Int, name:String)
 GET     /updateCoworker             weekplanning.controllers.CoworkerController.updateCoworker(id: Int, oldName: String, name: String)
 GET     /deleteCoworker             weekplanning.controllers.CoworkerController.deleteCoworker(id: Int, name: String)
+GET     /addWorkType                weekplanning.controllers.WorkTypeController.addWorkType(json: String)
+GET     /updateWorkType             weekplanning.controllers.WorkTypeController.updateWorkType(json: String)
+GET     /deleteWorkType             weekplanning.controllers.WorkTypeController.deleteWorkType(id: Int)
+GET     /getWorkTypes               weekplanning.controllers.WorkTypeController.getWorkTypes(id: Int)
+GET     /getWorkType                weekplanning.controllers.WorkTypeController.getWorkType(id: Int)
 
 POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
 POST    /authenticate               weekplanning.controllers.Auth.authenticate

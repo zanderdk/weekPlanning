@@ -19,7 +19,7 @@ export class MenuService {
         if(this.projectId !== 0){
             this.addToMenu("Kalender", "/schedule/" + +this.projectId, active === 0)
             this.addToMenu("Medarbejdere", "/coworkers/" + +this.projectId, active === 1)
-            this.addToMenu("Vagt typer", "/types/" + +this.projectId, active === 2)           
+            this.addToMenu("Vagt typer", "/workTypes/" + +this.projectId, active === 2)           
         } 
     }
 

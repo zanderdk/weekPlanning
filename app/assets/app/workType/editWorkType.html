@@ -1,0 +1,19 @@
+<form>
+  <div class="control-group">
+    <label>Vagt Typens navn</label>
+    <input [(ngModel)]="work.name" type="text" class="form-control">
+    <span [hidden]="work.name.length > 0"> Navn skal udfyldes.<br/></span>
+    <br/>
+    <label>Tiden en vagt tager</label>
+    <input [(ngModel)]="work.time" type="number" class="form-control">
+  </div>
+  <br/>
+  <div [hidden]="error.length == 0" class="alert alert-danger">
+    {{error}}
+  </div>
+  <div class="btn-group">
+      <button (click)="cancel()" type="button" class="btn btn-default">Anuller</button>
+      <button [hidden]="!edit" (click)="delete()" type="button" class="btn btn-danger">Slet</button>
+      <button [disabled]="work.name.length <= 0" (click)="save()" type="button" class="btn btn-primary">Gem</button>
+  </div>
+</form>

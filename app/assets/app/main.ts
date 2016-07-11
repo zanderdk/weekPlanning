@@ -5,7 +5,8 @@ import {ProjectService} from "./services/project.service"
 import { APP_ROUTER_PROVIDERS } from "./app.routes"
 import { UserService } from "./services/user.service"
 import {CoworkerService} from "./services/coworker.service";
+import {WorkTypeService} from "./services/workType.service";
 
 import "./rxjs-operators"
 
-bootstrap(AppComponent, [APP_ROUTER_PROVIDERS, HTTP_PROVIDERS, ProjectService, UserService, CoworkerService])
+bootstrap(AppComponent, [APP_ROUTER_PROVIDERS, HTTP_PROVIDERS, ProjectService, UserService, CoworkerService, WorkTypeService])
