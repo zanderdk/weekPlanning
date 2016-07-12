@@ -2,6 +2,7 @@ package models
 
 import play.api.libs.json.Json
 import slick.driver.PostgresDriver.api._
+import weekplanning.models.ProjectTableDef
 
 case class WorkType(id: Int, projectId: Int, name: String, time: Double)
 
@@ -16,6 +17,8 @@ class WorkTypeTableDef(tag: Tag) extends Table[WorkType](tag, "worktype") {
   def projectId = column[Int]("projectId")
   def name = column[String]("name")
   def time = column[Double]("time")
+
+  def fkToProject = foreignKey("project_fk", projectId, TableQuery[ProjectTableDef])(_.id, onUpdate = ForeignKeyAction.Cascade, onDelete = ForeignKeyAction.Cascade)
 
   override def * =
     (id, projectId, name, time) <>(WorkType.tupled, WorkType.unapply)

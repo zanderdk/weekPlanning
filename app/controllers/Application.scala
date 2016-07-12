@@ -1,6 +1,7 @@
 package weekplanning.controllers
 
 import models.Coworker
+import models.Week
 import play.api.mvc
 import play.api.mvc.{Action, Controller}
 import service.DAL
@@ -17,8 +18,11 @@ class Application extends Controller with Secured {
 /*    DAL.createUserSchema()
     DAL.createProjectSchema()
     DAL.createCollaboratesSchema()
-    DAL.createCoworkerSchema() */
+    DAL.createCoworkerSchema()
     DAL.createWorkTypeSchema()
+    DAL.createWeekSchema()
+    DAL.createDaySchema()*/
+
     Ok("schema created.")
   }
 
