@@ -15,16 +15,16 @@ import scala.util.{Failure, Success}
 class Application extends Controller with Secured {
 
   def test = Action {
-/*    DAL.createUserSchema()
+    DAL.createUserSchema()
     DAL.createProjectSchema()
     DAL.createCollaboratesSchema()
     DAL.createCoworkerSchema()
     DAL.createWorkTypeSchema()
     DAL.createWeekSchema()
-    DAL.createDaySchema()*/
+    DAL.createDaySchema()
 
-    DAL.addWeek(Week(0,32,2016,5))
-    Ok("schema created.")
+/*    DAL.addWeek(Week(0,32,2016,5))*/
+    Ok("schema created.1")
   }
 
   def index = withAuth { username => implicit request =>
