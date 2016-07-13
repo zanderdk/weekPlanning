@@ -23,11 +23,16 @@ class Application extends Controller with Secured {
     DAL.createWeekSchema()
     DAL.createDaySchema()*/
 
+    DAL.addWeek(Week(0,32,2016,5))
     Ok("schema created.")
   }
 
   def index = withAuth { username => implicit request =>
-    Redirect(routes.Application.projects())
+    Ok(views.html.projects(Global.name, "Projects", Global.menu))
+  }
+
+  def notFound(str: String) = Action {
+    Ok(views.html.projects(Global.name, "Projects", Global.menu))
   }
 
   def projects = withAuth { username => implicit request =>

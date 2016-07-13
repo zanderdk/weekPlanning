@@ -6,8 +6,10 @@ import CoworkersComponent from "./coworkers/coworkers.component"
 import EditCoworkersComponent from "./coworkers/edit.coworker.component";
 import WorkTypesComponent from "./workType/workTypes.component"
 import EditWorkTypeComponent from "./workType/edit.workType.component"
+import EditWeekComponent from "./schedule/editWeek.component"
 
 export const routes: RouterConfig = [
+  { path: "", component: ProjectsComponent },
   { path: "projects", component: ProjectsComponent },
   { path: "editProject/:id", component: EditProjectComponent },
   { path: "schedule/:id", component: ScheduleComponent },
@@ -16,7 +18,8 @@ export const routes: RouterConfig = [
   { path: "coworkers/:id", component: CoworkersComponent },
   { path: "workTypes/:id", component: WorkTypesComponent },
   { path: "editWorkType/:projectId", component: EditWorkTypeComponent },
-  { path: "editWorkType/:projectId/:workId", component: EditWorkTypeComponent }
+  { path: "editWorkType/:projectId/:workId", component: EditWorkTypeComponent },
+  { path: "editWeek/:projectId/:weekId", component: EditWeekComponent }
 ];
 
 export const APP_ROUTER_PROVIDERS = [

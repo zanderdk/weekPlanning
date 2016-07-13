@@ -1,1 +1,39 @@
+<div class="row-fluid">
+    <div class="tree">
+        <div class="topcorner">
+            <a [routerLink]="['/editWeek', projectId, 0]">
+                <div class="label label-primary">
+                    <span class="mega-octicon octicon-plus"></span>
+                </div>
+            </a>
+        </div>
+        <ul>
+            <li *ngFor="let week of weeks">
+                <span (click)="expandWeek(weeks.indexOf(week))" class="sp"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
+                <div>
+                    <a [routerLink]="['/editWeek', projectId, week.id]">
+                        <spn class="label label-primary">
+                            <spn class="octicon octicon-pencil"></spn>
+                        </spn>
+                    </a>
+                    <a (click)="delete(week.id)" href="javascript:;">
+                        <spn class="label label-danger">
+                            <spn class="octicon octicon-x"></spn>
+                        </spn>
+                    </a>
+                </div>
+                <ul [hidden]="!week.expanded">
+                    <li *ngFor="let day of week.days">
+                        <span class="label sp label-success"><i class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
+                        <div>
+                            <spn class="octicon octicon-pencil"></spn>
+                        </div>
+                        <ul>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 
+</div>

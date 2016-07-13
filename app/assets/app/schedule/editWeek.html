@@ -1,0 +1,19 @@
+<form>
+  <div class="control-group">
+    <label>År</label>
+    <input [(ngModel)]="week.year" type="number" class="form-control">
+    <span [hidden]="week.year > 0">År skal udfyldes<br/></span>
+    <br/>
+    <label>Uge Nr</label>
+    <input [(ngModel)]="week.weekNo" type="number" class="form-control">
+  </div>
+  <br/>
+  <div [hidden]="error.length == 0" class="alert alert-danger">
+    {{error}}
+  </div>
+  <div class="btn-group">
+      <button (click)="cancel()" type="button" class="btn btn-default">Anuller</button>
+      <button [hidden]="!edit" (click)="delete()" type="button" class="btn btn-danger">Slet</button>
+      <button [disabled]="(week.year < 0 || week.year > 3000) || (week.weekNo > 53 || week.weekNo < 1)" (click)="save()" type="button" class="btn btn-primary">Gem</button>
+  </div>
+</form>

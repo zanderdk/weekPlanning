@@ -25,6 +25,13 @@ GET     /updateWorkType             weekplanning.controllers.WorkTypeController.
 GET     /deleteWorkType             weekplanning.controllers.WorkTypeController.deleteWorkType(id: Int)
 GET     /getWorkTypes               weekplanning.controllers.WorkTypeController.getWorkTypes(id: Int)
 GET     /getWorkType                weekplanning.controllers.WorkTypeController.getWorkType(id: Int)
+GET     /getWeeks                   weekplanning.controllers.ScheduleController.getWeeks(projectId: Int)
+GET     /getDays                    weekplanning.controllers.ScheduleController.getDays(projectId: Int, weekId: Int)
+GET     /addWeek                    weekplanning.controllers.ScheduleController.addWeek(projectId: Int, year: Int, weekNo: Int)
+GET     /updateWeek                 weekplanning.controllers.ScheduleController.updateWeek(json: String)
+GET     /getWeek                    weekplanning.controllers.ScheduleController.getWeek(projectId:Int, weekId:Int)
+GET     /deleteWeek                 weekplanning.controllers.ScheduleController.deleteWeek(projectId:Int, weekId:Int)
+
 
 POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
 POST    /authenticate               weekplanning.controllers.Auth.authenticate
@@ -41,3 +48,7 @@ GET     /getProjectList             weekplanning.controllers.ProjectController.g
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 GET     /favicon.ico                controllers.Assets.at(path="/public", file="images/favicon.ico")
+
+
+GET     /$str<.*>                   weekplanning.controllers.Application.notFound(str: String)
+

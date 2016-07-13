@@ -1,8 +1,10 @@
 package service
 
+import play.api.mvc.Result
 import weekplanning.model.{User, UserTableDef}
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
+import weekplanning.models.Level.Level
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration

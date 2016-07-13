@@ -26,6 +26,25 @@ trait ScheduleService {
     db.run(weeks.filter(w => w.projectId === projectId).result)
   }
 
+  def getWeekFromDay(day: Day): Future[Option[Week]] = {
+    db.run(weeks.filter(w => w.id === day.weekId).result.headOption)
+  }
+  
+  def findWeek(searchFunction: (WeekTableDef => Rep[Boolean])): Future[Option[Week]] = {
+    db.run(weeks.filter(searchFunction).result.headOption)
+  }
+
+  def getDays(weekId: Int): Future[Seq[Day]] = {
+    db.run(days.filter(d => d.weekId === weekId).result)
+  }
+
+  def updateWeek(week:Week): Future[Try[String]] = {
+    val id = week.id
+    val q = for { w <- weeks if w.id === id } yield (w.year, w.weekNo)
+    val k = q.update((week.year, week.weekNo)).map(i => if(i > 0) Success("ok") else Failure{ new Exception("denne vagt type findes ikke.")})
+    db.run(k)
+  }
+
   def addWeek(week: Week): Future[Try[String]] = {
     val id = Await.result(db.run((weeks returning weeks
       .map(_.id)) += week)
@@ -34,7 +53,7 @@ trait ScheduleService {
     }, Duration.Inf).getOrElse(0)
 
     if(id != 0) {
-      db.run(days ++= (0 to 6).map(x => Day(0, id, WeekDay(x)))).map(_ => Success("ok"))
+      db.run(days ++= (1 to 7).map(x => Day(0, id, WeekDay(x)))).map(_ => Success("ok"))
         .recover{
           case ex:Exception => Failure(ex)
         }

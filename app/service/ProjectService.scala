@@ -1,7 +1,9 @@
 package service
 
+import play.api.mvc.Result
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
@@ -25,6 +27,14 @@ trait ProjectService {
 
   def createCollaboratesSchema(): Unit = {
     db.run(collaborations.schema.create)
+  }
+
+  def checkUser(projectId: Int, username: String, level:Level)(fun:(Boolean) => Result): Result = {
+    val lev = Await.result(getUserLevel(projectId, username), Duration.Inf)
+    lev match {
+      case Some(x) => if(x.id >= level.id) fun(true) else fun(false)
+      case _ => fun(false)
+    }
   }
 
   def getProjectOwner(pId: Int): Future[Option[User]] = {

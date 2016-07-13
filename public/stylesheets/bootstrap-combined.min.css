@@ -4716,10 +4716,18 @@ a.bg-danger:focus, a.bg-danger:hover {
     display: none !important; } }
 
 .tree {
+  border-radius: 4px;
+  background-color: #fafafb;
+  border: 1px solid #818a91;
   margin-bottom: 10px;
   min-height: 20px;
   overflow-y: auto;
   padding: 19px; }
+  .tree .topcorner {
+    float: right;
+    position: relative;
+    bottom: 0.5rem;
+    left: 0.4rem; }
   .tree a {
     display: inline;
     overflow: hidden;
@@ -4728,6 +4736,7 @@ a.bg-danger:focus, a.bg-danger:hover {
   .tree li {
     list-style-type: none;
     margin: 0px 0;
+    max-width: 85%;
     padding: 4px 0px 0px 2px;
     position: relative; }
     .tree li::before, .tree li::after {

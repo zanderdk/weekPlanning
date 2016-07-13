@@ -1,19 +1,25 @@
 package models
 
 import models.WeekDay.WeekDay
+import org.joda.time.DateTime
+import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import slick.driver.PostgresDriver.api._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import service.DAL
+
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 object WeekDay extends Enumeration {
   type WeekDay = Value
-  val monday = Value(0)
-  val tuesday = Value(1)
-  val wednesday = Value(2)
-  val thursday = Value(3)
-  val friday = Value(4)
-  val saturday = Value(5)
-  val sunday = Value(6)
+  val monday = Value(1)
+  val tuesday = Value(2)
+  val wednesday = Value(3)
+  val thursday = Value(4)
+  val friday = Value(5)
+  val saturday = Value(6)
+  val sunday = Value(7)
 
   implicit val myEnumMapper = MappedColumnType.base[WeekDay, Int](
     e => e.id,
@@ -21,13 +27,13 @@ object WeekDay extends Enumeration {
   )
 
   val stringToWeekDay: Map[String, WeekDay] = Map(
-      "monday" -> WeekDay.monday,
-      "tuesday" -> WeekDay.thursday,
-      "wednesday" -> WeekDay.wednesday,
-      "thursday" -> WeekDay.thursday,
-      "friday" -> WeekDay.friday,
-      "saturday" -> WeekDay.saturday,
-      "sunday" -> WeekDay.sunday
+      "Mandag" -> WeekDay.monday,
+      "Tirsdag" -> WeekDay.tuesday,
+      "Ondsdag" -> WeekDay.wednesday,
+      "Torsdag" -> WeekDay.thursday,
+      "Fredag" -> WeekDay.friday,
+      "Lørdag" -> WeekDay.saturday,
+      "Søndag" -> WeekDay.sunday
   )
 
   val weekDayToString = stringToWeekDay.map(_.swap)
@@ -38,13 +44,47 @@ object WeekDay extends Enumeration {
   }
 }
 
-case class Day(id: Int, weekId: Int, weekDay: WeekDay)
+case class Day(id: Int, weekId: Int, weekDay: WeekDay) {
+
+  def week(): Week = {
+    Await.result(DAL.getWeekFromDay(this), Duration.Inf).get
+  }
+
+  def date(): String = {
+    val year = week().year
+    val weekNo = week().weekNo
+    val dt:DateTime = new DateTime()
+    .withYear(year)
+    .withWeekOfWeekyear(weekNo).withDayOfWeek(weekDay.id)
+    val dateTimeFormatter:DateTimeFormatter  = DateTimeFormat.forPattern("dd/MM - yyyy")
+    dateTimeFormatter.print(dt)
+  }
+}
 
 object Day{
   import WeekDay.weekDayFormat
   def tupled(tup:(Int, Int, WeekDay)) : Day = Day(tup._1, tup._2, tup._3)
 
-  implicit val dayFormats = Json.format[Day]
+  def jsonUnapply(arg: Day): Option[(Int, Int, WeekDay, String)] = {
+    Some(arg.id, arg.weekId, arg.weekDay, arg.date())
+  }
+
+  val dayWrits: Writes[Day] = (
+  (JsPath \ "id").write[Int] and
+  (JsPath \ "weekId").write[Int] and
+  (JsPath \ "weekDay").write[WeekDay] and
+  (JsPath \ "date").write[String]
+  )(unlift(Day.jsonUnapply))
+
+
+  val dayReads: Reads[Day] = (
+  (JsPath \ "id").read[Int] and
+  (JsPath \ "weekId").read[Int] and
+  (JsPath \ "weekDay").read[WeekDay]
+  )(Day.apply _)
+
+  implicit val dayFormats: Format[Day] = Format(dayReads, dayWrits)
+
 }
 
 class DayTableDef(tag: Tag) extends Table[Day](tag, "day") {
