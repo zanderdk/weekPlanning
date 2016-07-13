@@ -1,5 +1,5 @@
 package models
 
-class Duty {
+class Duty (str: String){
 
 }
