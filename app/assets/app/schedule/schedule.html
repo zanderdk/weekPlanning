@@ -26,7 +26,11 @@
                     <li *ngFor="let day of week.days">
                         <span class="label sp label-success"><i class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
                         <div>
-                            <spn class="octicon octicon-pencil"></spn>
+                            <a [routerLink]="['/editDay', projectId, week.id, day.id]">
+                                <spn class="label label-primary">
+                                    <spn class="octicon octicon-pencil"></spn>
+                                </spn>
+                            </a>
                         </div>
                         <ul>
                         </ul>

@@ -4727,16 +4727,18 @@ a.bg-danger:focus, a.bg-danger:hover {
     float: right;
     position: relative;
     bottom: 0.5rem;
-    left: 0.4rem; }
+    left: 0.4rem;
+    z-index: 100000000000;
+    cursor: pointer; }
   .tree a {
     display: inline;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-decoration: none;
     width: 90%; }
   .tree li {
     list-style-type: none;
     margin: 0px 0;
-    max-width: 85%;
     padding: 4px 0px 0px 2px;
     position: relative; }
     .tree li::before, .tree li::after {
