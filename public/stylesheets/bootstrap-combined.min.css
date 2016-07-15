@@ -4788,5 +4788,7 @@ a.bg-danger:focus, a.bg-danger:hover {
       height: 30px; }
   .tree > ul > li::before, .tree > ul > li::after {
     border: 0; }
+  .tree #jumbo {
+    padding: 0rem, 2rem; }
 
 /*# sourceMappingURL=bootstrap-combined.min.css.map */

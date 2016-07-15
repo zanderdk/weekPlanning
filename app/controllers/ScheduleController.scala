@@ -1,7 +1,7 @@
 package weekplanning.controllers
 
 import akka.stream.FlowMonitorState.Failed
-import models.{Day, Week, WeekTableDef}
+import models._
 import play.api.libs.json.Json
 import play.api.mvc.{Controller, Result}
 import service.DAL
@@ -9,6 +9,7 @@ import weekplanning.models.Level
 import weekplanning.models.Level.Level
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -22,10 +23,68 @@ class ScheduleController extends Controller with Secured {
     DAL.checkUser(projectId, username, Level.Read){check =>
 
       val days:Seq[Day] = if(check) {
-        Await.result(DAL.getDays(weekId), Duration.Inf)
+
+        val q = for {
+          q1 <- DAL.getDays(weekId)
+          q2 <- DAL.getDutys(weekId)
+        } yield (q1, q2)
+
+        val res = Await.result(q, Duration.Inf)
+        res._1.map{ d =>
+          val day = Day.unapply(d).get
+          new Day(day._1, day._2, day._3) {
+            override lazy val dutys = res._2.filter(dd => dd.dayId == day._1)
+          }
+        }
+
       } else Seq()
 
       Ok(Json.toJson(days))
+    }
+  }
+
+  def searchCoworkers(projectId: Int, name: String) = withAuth { username => implicit request =>
+    DAL.checkUser(projectId, username, Level.Read) { check =>
+      val lst: Seq[Coworker] = if(!check) Seq() else {
+        Await.result(DAL.getCoworker(projectId), Duration.Inf).filter(c => c.name.toLowerCase.indexOf(name.toLowerCase()) != -1)
+      }
+      Ok(Json.toJson(lst))
+    }
+  }
+
+  def getDutys(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
+    DAL.checkUser(projectId, username, Level.Read) {check =>
+      val dutys: Seq[Duty] = if(!check) Seq() else {
+        Await.result(DAL.getDutys(weekId), Duration.Inf)
+      }
+      Ok(Json.toJson(dutys))
+    }
+  }
+
+  def getDuty(projectId: Int, dutyId: Int)  = withAuth { username => implicit request =>
+    DAL.checkUser(projectId, username, Level.Read) {check =>
+      if(!check) {
+        Ok("du har ikke retigheder til at se dette projekt")
+      } else {
+        Await.result(DAL.getDuty(dutyId), Duration.Inf) match {
+          case Some(x) => Ok(Json.toJson(x))
+          case None => Ok("denne vagt blev ikke fundet")
+        }
+      }
+    }
+  }
+
+
+  def addDutys(projectId: Int, json: String) = withAuth { username => implicit request =>
+    DAL.checkUser(projectId, username, Level.Write) { check =>
+      if(!check) Ok("du har ikke retighed til at tilføje vagtet") else {
+        val dutys = Json.parse(json).as[Seq[Duty]]
+        Await.result(DAL.addDutys(dutys), Duration.Inf) match {
+          case Success(_) => Ok("ok")
+          case Failure(ex) => Ok(ex.getMessage)
+        }
+        Ok("ok")
+      }
     }
   }
 
@@ -41,6 +100,17 @@ class ScheduleController extends Controller with Secured {
     }
   }
 
+  def deleteDuty(projectId: Int, dutyId: Int) = withAuth { username => implicit request =>
+    DAL.checkUser(projectId, username, Level.Write) { check =>
+      if(!check) Ok("du har ikke retighed til at ændre dette projekt") else {
+        Await.result(DAL.deleteDuty(dutyId), Duration.Inf) match {
+          case Success(_) => Ok("ok")
+          case Failure(ex) => Ok(ex.getMessage)
+        }
+      }
+    }
+  }
+
   def deleteWeek(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
     DAL.checkUser(projectId, username, Level.Write) { check =>
       if(!check) Ok("du har ikke retighed til at ændre dette projekt") else {
@@ -51,6 +121,22 @@ class ScheduleController extends Controller with Secured {
       }
     }
   }
+
+  def updateDuty(projectId: Int, json: String) = withAuth { username => implicit resquest =>
+    val duty = Json.parse(json).as[Duty]
+
+    DAL.checkUser(projectId, username, Level.Write){ check =>
+      if(!check) Ok("du har ikke retighed til at ændre dette projekt.")
+      else {
+        Await.result(DAL.updateDuty(duty), Duration.Inf) match {
+          case Failure(ex) => Ok(ex.getMessage)
+          case Success(_) => Ok("ok")
+        }
+      }
+    }
+  }
+
+
 
   def updateWeek(json: String) = withAuth { username => implicit resquest =>
     val week = Json.parse(json).as[Week]

@@ -46,13 +46,17 @@ object WeekDay extends Enumeration {
 
 case class Day(id: Int, weekId: Int, weekDay: WeekDay) {
 
-  def week(): Week = {
+  lazy val week: Week = {
     Await.result(DAL.getWeekFromDay(this), Duration.Inf).get
   }
 
+  lazy val dutys: Seq[Duty] = {
+    Await.result(DAL.getDutys(weekId), Duration.Inf).filter(d => d.dayId == id)
+  }
+
   def date(): String = {
-    val year = week().year
-    val weekNo = week().weekNo
+    val year = week.year
+    val weekNo = week.weekNo
     val dt:DateTime = new DateTime()
     .withYear(year)
     .withWeekOfWeekyear(weekNo).withDayOfWeek(weekDay.id)
@@ -65,15 +69,16 @@ object Day{
   import WeekDay.weekDayFormat
   def tupled(tup:(Int, Int, WeekDay)) : Day = Day(tup._1, tup._2, tup._3)
 
-  def jsonUnapply(arg: Day): Option[(Int, Int, WeekDay, String)] = {
-    Some(arg.id, arg.weekId, arg.weekDay, arg.date())
+  def jsonUnapply(arg: Day): Option[(Int, Int, WeekDay, String, Seq[Duty])] = {
+    Some(arg.id, arg.weekId, arg.weekDay, arg.date(), arg.dutys)
   }
 
   val dayWrits: Writes[Day] = (
   (JsPath \ "id").write[Int] and
   (JsPath \ "weekId").write[Int] and
   (JsPath \ "weekDay").write[WeekDay] and
-  (JsPath \ "date").write[String]
+  (JsPath \ "date").write[String] and
+  (JsPath \ "dutys").write[Seq[Duty]]
   )(unlift(Day.jsonUnapply))
 
 

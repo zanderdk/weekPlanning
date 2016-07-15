@@ -9,7 +9,7 @@
         </div>
         <ul>
             <li *ngFor="let week of weeks">
-                <span (click)="expandWeek(weeks.indexOf(week))" class="sp"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
+                <span (click)="userExpandWeek(week.id)" class="sp"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
                 <div>
                     <a [routerLink]="['/editWeek', projectId, week.id]">
                         <spn class="label label-primary">
@@ -24,15 +24,28 @@
                 </div>
                 <ul [hidden]="!week.expanded">
                     <li *ngFor="let day of week.days">
-                        <span class="label sp label-success"><i class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
+                        <span (click)="userExpandDay(day.id)" class="label sp label-success"><i [hidden]="day.expanded" class="octicon octicon-plus" ></i> <i [hidden]="!day.expanded" class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
                         <div>
-                            <a [routerLink]="['/editDay', projectId, week.id, day.id]">
+                            <a [routerLink]="['/addDuty', projectId, day.id]">
                                 <spn class="label label-primary">
-                                    <spn class="octicon octicon-pencil"></spn>
+                                    <spn class="octicon octicon-plus"></spn>
                                 </spn>
                             </a>
                         </div>
-                        <ul>
+                        <ul [hidden]="!day.expanded">
+                            <li *ngFor="let duty of day.dutys">
+                                <span>{{duty.coworker.name}} - {{duty.workType.name}}</span>
+                                <a [routerLink]="['/editDuty', projectId, duty.id]">
+                                    <spn class="label label-primary">
+                                        <spn class="octicon octicon-pencil"></spn>
+                                    </spn>
+                                </a>
+                                <a (click)="deleteDuty(duty.id)" href="javascript:;">
+                                    <spn class="label label-danger">
+                                        <spn class="octicon octicon-x"></spn>
+                                    </spn>
+                                </a>
+                            </li>
                         </ul>
                     </li>
                 </ul>

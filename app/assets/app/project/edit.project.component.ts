@@ -144,7 +144,7 @@ export default class EditProjectComponent implements OnInit, OnDestroy  {
                         this.initCol = col
                     }
                 )
-            } 
+            }
 
         this.edit = (id === 0)? false : true
         $(".js-example-basic-single").select2({

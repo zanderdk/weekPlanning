@@ -7,6 +7,7 @@ import EditCoworkersComponent from "./coworkers/edit.coworker.component";
 import WorkTypesComponent from "./workType/workTypes.component"
 import EditWorkTypeComponent from "./workType/edit.workType.component"
 import EditWeekComponent from "./schedule/editWeek.component"
+import AddDutyComponent from "./schedule/addDuty.component"
 import EditDutyComponent from "./schedule/editDuty.component"
 
 export const routes: RouterConfig = [
@@ -20,7 +21,8 @@ export const routes: RouterConfig = [
   { path: "workTypes/:id", component: WorkTypesComponent },
   { path: "editWorkType/:projectId", component: EditWorkTypeComponent },
   { path: "editWorkType/:projectId/:workId", component: EditWorkTypeComponent },
-  { path: "editDay/:projectId/:weekId/:dayId", component: EditDutyComponent },
+  { path: "addDuty/:projectId/:dayId", component: AddDutyComponent },
+  { path: "editDuty/:projectId/:dutyId", component: EditDutyComponent },
   { path: "editWeek/:projectId/:weekId", component: EditWeekComponent }
 ];
 

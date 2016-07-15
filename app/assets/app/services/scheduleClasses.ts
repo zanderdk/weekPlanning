@@ -1,10 +1,25 @@
+import Coworker from "./coworker.service"
+import WorkType from "./workType.service"
 
 export class Day{
     constructor(
-       private id:number,
-       private weekId: number,
-       private weekDay: string,
-       private date: string
+       public id:number,
+       public weekId: number,
+       public weekDay: string,
+       public date: string,
+       public dutys: Duty[],
+       public expanded: boolean
+    ) {}
+}
+
+export class Duty{
+    constructor(
+        public id: number,
+        public dayId: number,
+        public coworkerId: number,
+        public workTypeId: number,
+        public coworker: Coworker,
+        public workType: WorkType
     ) {}
 }
 

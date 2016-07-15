@@ -1,7 +1,7 @@
 <form>
-  <label>medarbejder</label>
+  <label>Tilføj medarbejder</label>
     <br/>
-    <select class="js-example-basic-single form-control">
+    <select class="js-example-basic-single form-control" multiple="multiple">
     </select>
     <br/>
     <label>Vagt type</label>
@@ -15,7 +15,6 @@
     <br/>
   <div class="btn-group">
       <button (click)="cancel()" type="button" class="btn btn-default">Anuller</button>
-      <button (click)="delete()" type="button" class="btn btn-danger">Slet</button>
-      <button [disabled]="false" (click)="save()" type="button" class="btn btn-primary">Gem</button>
+      <button [disabled]="selectedWorkType == null || selectedCoworkersIds.length == 0" (click)="save()" type="button" class="btn btn-primary">Gem</button>
   </div>
 </form>
