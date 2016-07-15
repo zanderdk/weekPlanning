@@ -9,12 +9,12 @@ import {WorkType} from "../services/workTypeClasses"
 import {WorkTypeService} from "../services/workType.service"
 
 @Component({
-    selector: "addDuty",
-    templateUrl: "assets/app/schedule/addDuty.html",
+    selector: "addDutyWeek",
+    templateUrl: "assets/app/schedule/addDutyWeek.html",
     directives: [ROUTER_DIRECTIVES]
 })
 
-export default class AddDutyComponent implements OnInit {
+export default class AddDutyWeekComponent implements OnInit {
     private sub: any
     private error: string = ""
     private projectId: number = 0
@@ -22,7 +22,7 @@ export default class AddDutyComponent implements OnInit {
     private workTypes: WorkType[] = []
     private selectedCoworkersIds: number[] = []
     private selectedWorkType: WorkType = null
-    private dayId: number
+    private weekId: number
 
     private selectedCoworkers(): Coworker[] {
         return this.coworkers.filter(x =>
@@ -56,9 +56,9 @@ export default class AddDutyComponent implements OnInit {
     ngOnInit() {
         this.sub = this.route.params.subscribe(params => {
             let id = +params['projectId']
-            let dayId = +params['dayId']
+            let weekId = +params['weekId']
             this.projectId = id
-            this.dayId = dayId
+            this.weekId = weekId
             this.coworkerService.getCoworkers(id).then(res => {
                 this.coworkers = res
                 let data = this.coworkers.map(x => {
@@ -106,7 +106,7 @@ export default class AddDutyComponent implements OnInit {
     }
 
     cancel() {
-        this.check("ok")
+        this.ch
     }
 
     check(res: string) {
@@ -120,10 +120,8 @@ export default class AddDutyComponent implements OnInit {
 
     private dutys(): Duty[] {
         let work = this.selectedWorkType
-        let dutys = this.selectedCoworkers().map(x => {
-            return new Duty(0, this.dayId, x.id, work.id, x, work)
-        })
-        return dutys
+        let dutys = this.selectedCoworkers()
+        return []
     }
 
     save() {

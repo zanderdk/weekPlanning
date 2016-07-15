@@ -152,7 +152,7 @@ trait ScheduleService {
       .map {
         case Success(_) => true
         case Failure(_) => false
-      }.reduce(_ && _)
+      }.foldLeft(true)(_ && _)
 
     val con2 = if(con1) Await.result(db.run(days.filter(d => d.weekId === weekId).delete)
       .map(i => i == 7), Duration.Inf) else false

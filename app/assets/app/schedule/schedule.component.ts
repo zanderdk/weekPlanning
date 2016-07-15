@@ -53,7 +53,7 @@ export default class ScheduleComponent implements OnInit {
     }
 
     userExpandWeek(weekId: number) {
-        let cookie = $.fn.cookieList('weekExpansions')
+        let cookie = $.fn.cookieList('weekExpansions' + this.projectId)
         this.expandWeek(weekId).then(week => {
             if(week.expanded) {
                 cookie.add(weekId)
@@ -65,7 +65,7 @@ export default class ScheduleComponent implements OnInit {
     }
 
     userExpandDay(dayId: number) {
-        let cookie = $.fn.cookieList('dayExpansions')
+        let cookie = $.fn.cookieList('dayExpansions' + this.projectId)
         this.expandDay(dayId).then(day => {
             if(day.expanded) {
                cookie.add(day.id)
@@ -87,7 +87,7 @@ export default class ScheduleComponent implements OnInit {
     }
 
     autoExpandDay(day: Day) {
-        let days: number[] = $.fn.cookieList('dayExpansions').items()
+        let days: number[] = $.fn.cookieList('dayExpansions' + this.projectId).items()
 
         let id = day.id
         let nr = days.indexOf(id)
@@ -101,8 +101,8 @@ export default class ScheduleComponent implements OnInit {
     }
 
     autoExpand() {
-        let weeks: number[] = $.fn.cookieList('weekExpansions').items()
-        let days: number[] = $.fn.cookieList('dayExpansions').items()
+        let weeks: number[] = $.fn.cookieList('weekExpansions' + this.projectId ).items()
+        let days: number[] = $.fn.cookieList('dayExpansions' + this.projectId).items()
         this.restExpand = days
         weeks.forEach(x => {
             this.expandWeek(x).then(w => {
@@ -162,7 +162,7 @@ export default class ScheduleComponent implements OnInit {
     delete(weekId:number) {
         this.scheduleService.deleteWeek(new Week(weekId, this.projectId, 0, 0, [], false))
             .then(res => {
-                let cookie = $.fn.cookieList('dayExpansions')
+                let cookie = $.fn.cookieList('weekExpansions' + this.projectId)
                 cookie.remove(weekId)
                 this.check(res)
                 })

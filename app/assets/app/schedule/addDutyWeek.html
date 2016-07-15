@@ -1,0 +1,20 @@
+<form>
+  <label>Tilføj medarbejder</label>
+    <br/>
+    <select class="js-example-basic-single form-control" multiple="multiple">
+    </select>
+    <br/>
+    <label>Vagt type</label>
+    <br/>
+    <select class="js-example-basic-single2 form-control">
+    </select>
+    <br/>
+  <div [hidden]="error.length == 0" class="alert alert-danger">
+    {{error}}
+  </div>
+    <br/>
+  <div class="btn-group">
+      <button (click)="cancel()" type="button" class="btn btn-default">Anuller</button>
+      <button [disabled]="selectedWorkType == null || selectedCoworkersIds.length == 0" (click)="save()" type="button" class="btn btn-primary">Gem</button>
+  </div>
+</form>

@@ -11,6 +11,11 @@
             <li *ngFor="let week of weeks">
                 <span (click)="userExpandWeek(week.id)" class="sp"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
                 <div>
+                    <a [routerLink]="['/addDutyWeek', projectId, week.id]">
+                        <spn class="label label-success">
+                            <spn class="octicon octicon-plus"></spn>
+                        </spn>
+                    </a>
                     <a [routerLink]="['/editWeek', projectId, week.id]">
                         <spn class="label label-primary">
                             <spn class="octicon octicon-pencil"></spn>
