@@ -20,6 +20,7 @@ import {WorkTypeFilter} from "./workTypeFilter"
 export default class WorkTypesComponent implements OnInit {
     private projectId: number = 0
     private visability: string = ""
+    private canEdit: boolean = false
     private sub: any
     private name: string = ""
     private menuService: MenuService
@@ -37,6 +38,7 @@ export default class WorkTypesComponent implements OnInit {
             this.userService.getUsersVisabilityForProject(this.projectId)
                 .then(res => {
                     this.viability = res
+                    this.canEdit = (res === "Read")? false : true
                     this.menuService = new MenuService(this.projectId, this.router)
                     this.menuService.initDefaults(2)
                     this.workTypeService.getWorkTypes(this.projectId)

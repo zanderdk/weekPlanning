@@ -10,6 +10,10 @@ export class Day{
        public dutys: Duty[],
        public expanded: boolean
     ) {}
+
+    public color(): string {
+        return (this.dutys.length === 0)? "danger" : "success"
+    }
 }
 
 export class Duty{
@@ -20,7 +24,8 @@ export class Duty{
         public workTypeId: number,
         public coworker: Coworker,
         public workType: WorkType
-    ) {}
+    ) { }
+
 }
 
 export class Week{

@@ -24,6 +24,7 @@ export default class CoworkersComponent implements OnInit {
     private name: string = ""
     private menuService: MenuService
     private coworkers: Coworker[] = []
+    private canEdit: boolean = false
     
     constructor (
         @Inject(ProjectService) private projectService: ProjectService,
@@ -38,6 +39,7 @@ export default class CoworkersComponent implements OnInit {
             this.userService.getUsersVisabilityForProject(this.projectId)
                 .then(res => {
                     this.viability = res
+                    this.canEdit = (res === "Read")? false : true
                     this.menuService = new MenuService(this.projectId, this.router)
                     this.menuService.initDefaults(1)
                     this.coworkerService.getCoworkers(this.projectId).then(corkers => {

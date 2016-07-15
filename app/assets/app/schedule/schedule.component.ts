@@ -17,6 +17,7 @@ import {Week, Day} from "../services/scheduleClasses"
 export default class ScheduleComponent implements OnInit {
     private projectId: number = 0
     private visability: string = ""
+    private canEdit: boolean = false
     private error = ""
     private sub: any
     private weeks: Week[] = []
@@ -44,6 +45,7 @@ export default class ScheduleComponent implements OnInit {
             this.userService.getUsersVisabilityForProject(this.projectId)
                 .then(res => {
                     this.viability = res
+                    this.canEdit = (res === "Read")? false : true
                 })
         })
         this.menuService = new MenuService(this.projectId, this.router)

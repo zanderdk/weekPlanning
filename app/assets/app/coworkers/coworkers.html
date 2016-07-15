@@ -6,7 +6,7 @@
       <tr>
         <th>Medarbejders navn</th>
         <th>
-            <a [routerLink]="['/editCoworker', projectId]">
+            <a [hidden]="!canEdit" [routerLink]="['/editCoworker', projectId]">
                 <span class="octicon octicon-plus"></span>
             </a>
       </tr>
@@ -17,7 +17,7 @@
             {{worker.name}}
           </td>
           <td>
-            <a [routerLink]="['/editCoworker', projectId, worker.name]"><span class="octicon octicon-pencil"></span></a>
+            <a [hidden]="!canEdit" [routerLink]="['/editCoworker', projectId, worker.name]"><span class="octicon octicon-pencil"></span></a>
           </td>
       </tr>
       </tbody>

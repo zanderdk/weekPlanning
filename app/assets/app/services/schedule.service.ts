@@ -81,7 +81,8 @@ export class ScheduleService {
         let data: Any[] = body || {}
         let days = data.map(d => {
             d['expanded'] = false
-            return d
+            let dd = new Day(d.id, d.weekId, d.weekDay, d.date, d.dutys, d.expanded)
+            return dd
         })
         return days
     }

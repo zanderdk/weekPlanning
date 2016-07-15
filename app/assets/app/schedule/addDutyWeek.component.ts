@@ -2,7 +2,7 @@ import {Component, OnInit, Inject} from "@angular/core"
 import { ROUTER_DIRECTIVES } from "@angular/router"
 import { Router, ActivatedRoute } from "@angular/router"
 import { ScheduleService } from "../services/schedule.service"
-import {Day, Duty} from "../services/scheduleClasses"
+import {Day, Duty, Week} from "../services/scheduleClasses"
 import {Coworker} from "../services/coworkerClasses"
 import {CoworkerService} from "../services/coworker.service"
 import {WorkType} from "../services/workTypeClasses"
@@ -22,7 +22,7 @@ export default class AddDutyWeekComponent implements OnInit {
     private workTypes: WorkType[] = []
     private selectedCoworkersIds: number[] = []
     private selectedWorkType: WorkType = null
-    private weekId: number
+    private week: Week = new Week(0, 0, 0, 0, [], false)
 
     private selectedCoworkers(): Coworker[] {
         return this.coworkers.filter(x =>
@@ -58,7 +58,13 @@ export default class AddDutyWeekComponent implements OnInit {
             let id = +params['projectId']
             let weekId = +params['weekId']
             this.projectId = id
-            this.weekId = weekId
+            this.scheduleService.getWeek(this.projectId, weekId).then(w => {
+                this.week = w
+                this.scheduleService.getDays(id, weekId).then(res => {
+                    this.week.days = res
+                })
+            })
+
             this.coworkerService.getCoworkers(id).then(res => {
                 this.coworkers = res
                 let data = this.coworkers.map(x => {
@@ -106,7 +112,7 @@ export default class AddDutyWeekComponent implements OnInit {
     }
 
     cancel() {
-        this.ch
+        this.check("ok")
     }
 
     check(res: string) {
@@ -120,8 +126,16 @@ export default class AddDutyWeekComponent implements OnInit {
 
     private dutys(): Duty[] {
         let work = this.selectedWorkType
-        let dutys = this.selectedCoworkers()
-        return []
+        let arr: Day[] = this.week.days
+        arr.splice(-2, 2)
+        let dutys = this.selectedCoworkers().map(x => {
+            let ar = arr.map(d => {
+                return new Duty(0, d.id, x.id, work.id, x, work)
+            })
+            return ar
+        })
+        let x = flatten(dutys, false)
+        return x
     }
 
     save() {

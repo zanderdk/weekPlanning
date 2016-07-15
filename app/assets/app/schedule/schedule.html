@@ -1,7 +1,7 @@
 <div class="row-fluid">
     <div class="tree">
         <div class="topcorner">
-            <a [routerLink]="['/editWeek', projectId, 0]">
+            <a [hidden]="!canEdit" [routerLink]="['/editWeek', projectId, 0]">
                 <div class="label label-primary">
                     <span class="mega-octicon octicon-plus"></span>
                 </div>
@@ -10,7 +10,7 @@
         <ul>
             <li *ngFor="let week of weeks">
                 <span (click)="userExpandWeek(week.id)" class="sp"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
-                <div>
+                <div [hidden]="!canEdit">
                     <a [routerLink]="['/addDutyWeek', projectId, week.id]">
                         <spn class="label label-success">
                             <spn class="octicon octicon-plus"></spn>
@@ -29,9 +29,9 @@
                 </div>
                 <ul [hidden]="!week.expanded">
                     <li *ngFor="let day of week.days">
-                        <span (click)="userExpandDay(day.id)" class="label sp label-success"><i [hidden]="day.expanded" class="octicon octicon-plus" ></i> <i [hidden]="!day.expanded" class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
+                        <span (click)="userExpandDay(day.id)" class="label sp label-{{day.color()}}"><i [hidden]="day.expanded" class="octicon octicon-plus" ></i> <i [hidden]="!day.expanded" class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
                         <div>
-                            <a [routerLink]="['/addDuty', projectId, day.id]">
+                            <a [hidden]="!canEdit" [routerLink]="['/addDuty', projectId, day.id]">
                                 <spn class="label label-primary">
                                     <spn class="octicon octicon-plus"></spn>
                                 </spn>
@@ -40,12 +40,12 @@
                         <ul [hidden]="!day.expanded">
                             <li *ngFor="let duty of day.dutys">
                                 <span>{{duty.coworker.name}} - {{duty.workType.name}}</span>
-                                <a [routerLink]="['/editDuty', projectId, duty.id]">
+                                <a [hidden]="!canEdit" [routerLink]="['/editDuty', projectId, duty.id]">
                                     <spn class="label label-primary">
                                         <spn class="octicon octicon-pencil"></spn>
                                     </spn>
                                 </a>
-                                <a (click)="deleteDuty(duty.id)" href="javascript:;">
+                                <a [hidden]="!canEdit" (click)="deleteDuty(duty.id)" href="javascript:;">
                                     <spn class="label label-danger">
                                         <spn class="octicon octicon-x"></spn>
                                     </spn>

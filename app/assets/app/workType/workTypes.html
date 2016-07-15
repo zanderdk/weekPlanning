@@ -9,7 +9,7 @@
             Vagt typens tid
         </th>
         <th>
-            <a [routerLink]="['/editWorkType', projectId]">
+            <a [hidden]="!canEdit" [routerLink]="['/editWorkType', projectId]">
                 <span class="octicon octicon-plus"></span>
             </a>
       </tr>
@@ -23,7 +23,7 @@
               {{workType.time}}
           </td>
           <td>
-            <a [routerLink]="['/editWorkType', projectId, workType.id]"><span class="octicon octicon-pencil"></span></a>
+            <a [hidden]="!canEdit" [routerLink]="['/editWorkType', projectId, workType.id]"><span class="octicon octicon-pencil"></span></a>
           </td>
       </tr>
       </tbody>

@@ -87,14 +87,14 @@ trait ScheduleService {
     k
   }
 
+  def getWeekFromDay(day: Day): Future[Option[Week]] = {
+    db.run(weeks.filter(w => w.id === day.weekId).result.headOption)
+  }
+
   def getWeeks(projectId: Int): Future[Seq[Week]] = {
     db.run(weeks.filter(w => w.projectId === projectId).result)
   }
 
-  def getWeekFromDay(day: Day): Future[Option[Week]] = {
-    db.run(weeks.filter(w => w.id === day.weekId).result.headOption)
-  }
-  
   def findWeek(searchFunction: (WeekTableDef => Rep[Boolean])): Future[Option[Week]] = {
     db.run(weeks.filter(searchFunction).result.headOption)
   }
