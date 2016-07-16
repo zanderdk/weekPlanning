@@ -1,5 +1,6 @@
 package service
 
+import models.{Coworker, Week, WorkType}
 import play.api.mvc.Result
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
@@ -18,6 +19,14 @@ trait ProjectService {
   val projects = TableQuery[ProjectTableDef]
   val collaborations = TableQuery[CollaboratesTabelDef]
   val users:TableQuery[UserTableDef]
+
+  def deleteWeek(weekId: Int): Future[Try[String]]
+  def getWeeks(projectId: Int): Future[Seq[Week]]
+  def getWorkTypeProjectId(id: Int): Future[Option[Int]]
+  def deleteWorkType(id: Int): Future[Try[String]]
+  def getCoworker(projectId: Int): Future[Seq[Coworker]]
+  def deleteCoworker(projectId: Int, name:String): Future[Try[String]]
+  def getWorkTypes(projectId: Int): Future[Seq[WorkType]]
 
   def getUser(username: String): Future[Option[User]]
 
@@ -120,8 +129,31 @@ trait ProjectService {
   }
 
   def deleteProject(id: Int): Future[Try[Int]] = {
-    db.run(projects.filter(_.id === id).delete).map(res => Success(res)).recover{
+    val getQ = for {
+      co <- getCoworker(id)
+      we <- getWeeks(id)
+      wo <- getWorkTypes(id)
+    } yield (co, we, wo)
+
+    val (cow, wee, wor) = Await.result(getQ, Duration.Inf)
+
+    val delWeeks =  Await.result(Future.sequence(wee.map(x => deleteWeek(x.id))), Duration.Inf)
+      .map(x => x.isSuccess).fold(true)(_ && _)
+
+    val delWorkTypes = Await.result(Future.sequence(wor.map(x => deleteWorkType(x.id))), Duration.Inf)
+      .map(x => x.isSuccess).fold(true)(_ && _)
+
+    val delCoworker =  Await.result(Future.sequence(cow.map(x => deleteCoworker(id, x.name))), Duration.Inf)
+      .map(x => x.isSuccess).fold(true)(_ && _)
+
+    val deleteColla = Await.result(deleteAllColaboratorsForProject(id), Duration.Inf)
+          .isSuccess
+
+    if(delWeeks && delWorkTypes && delCoworker && deleteColla)
+      db.run(projects.filter(_.id === id).delete).map(res => Success(res)).recover{
       case ex: Exception => Failure(ex)
+    } else {
+      Future { Failure(new Exception("intern server fejl.")) }
     }
   }
 

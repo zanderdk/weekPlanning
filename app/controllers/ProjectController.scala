@@ -138,12 +138,11 @@ class ProjectController extends Controller with Secured {
 
       if(canEdit) {
         val k = for {
-          x <- DAL.deleteAllColaboratorsForProject(id)
           y <- DAL.deleteProject(id)
-        } yield (x, y)
+        } yield (y)
         val res = Await.result(k, Duration.Inf)
         res match {
-          case (Success(_), Success(_)) => Ok("ok")
+          case (Success(_)) => Ok("ok")
           case _ => Ok("error")
         }
       } else {
