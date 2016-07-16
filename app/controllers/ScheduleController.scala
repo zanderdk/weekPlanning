@@ -183,7 +183,9 @@ class ScheduleController extends Controller with Secured {
           Seq()
         }
 
-      Ok(Json.toJson(lst))
+      val weeks = lst.view.sortBy(w => (w.year, w.weekNo)).reverse.force
+
+      Ok(Json.toJson(weeks))
     }
   }
 

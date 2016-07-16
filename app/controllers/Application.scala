@@ -21,11 +21,11 @@ class Application extends Controller with Secured {
     DAL.createCoworkerSchema()
     DAL.createWorkTypeSchema()
     DAL.createWeekSchema()
-    DAL.createDaySchema()*/
-    DAL.createDutySchema()
+    DAL.createDaySchema()
+    DAL.createDutySchema()*/
 
 /*    DAL.addWeek(Week(0,32,2016,5))*/
-    Ok("schema created")
+    Ok("dfdf")
   }
 
   def index = withAuth { username => implicit request =>

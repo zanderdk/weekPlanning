@@ -66,7 +66,6 @@ trait ScheduleService {
   }
 
 
-
   def getDutys(weekId: Int): Future[Seq[Duty]] = {
     val q = for {
       w <- weeks if w.id === weekId

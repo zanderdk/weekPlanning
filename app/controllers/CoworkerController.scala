@@ -58,7 +58,7 @@ class CoworkerController extends Controller with Secured {
       if(l.id >= 1) {
         Await.result(DAL.getCoworker(id), Duration.Inf).find(c => c.name == name)
           .map(_ => Ok("allerede en bruger med det navn")).getOrElse(
-          Await.result(DAL.addCoworker(Coworker(0, id, name)), Duration.Inf) match {
+          Await.result(DAL.addCoworker(Coworker(0, id, 37.0, name)), Duration.Inf) match {
             case Success(_) => Ok("ok")
             case Failure(e) => Ok(e.getMessage)
           }
