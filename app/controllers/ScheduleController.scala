@@ -43,15 +43,6 @@ class ScheduleController extends Controller with Secured {
     }
   }
 
-  def searchCoworkers(projectId: Int, name: String) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Read) { check =>
-      val lst: Seq[Coworker] = if(!check) Seq() else {
-        Await.result(DAL.getCoworker(projectId), Duration.Inf).filter(c => c.name.toLowerCase.indexOf(name.toLowerCase()) != -1)
-      }
-      Ok(Json.toJson(lst))
-    }
-  }
-
   def getDutys(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
     DAL.checkUser(projectId, username, Level.Read) {check =>
       val dutys: Seq[Duty] = if(!check) Seq() else {

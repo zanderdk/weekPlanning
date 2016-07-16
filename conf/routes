@@ -32,7 +32,6 @@ GET     /updateWeek                 weekplanning.controllers.ScheduleController.
 GET     /getWeek                    weekplanning.controllers.ScheduleController.getWeek(projectId:Int, weekId:Int)
 GET     /deleteWeek                 weekplanning.controllers.ScheduleController.deleteWeek(projectId:Int, weekId:Int)
 GET     /addDutys                   weekplanning.controllers.ScheduleController.addDutys(projectId:Int, json: String)
-GET     /getDutys                   weekplanning.controllers.ScheduleController.getDutys(projectId:Int, weekId:Int)
 GET     /getDuty                    weekplanning.controllers.ScheduleController.getDuty(projectId: Int, dutyId: Int)
 GET     /updateDuty                 weekplanning.controllers.ScheduleController.updateDuty(projectId: Int, json: String)
 GET     /deleteDuty                 weekplanning.controllers.ScheduleController.deleteDuty(projectId:Int, dutyId:Int)
