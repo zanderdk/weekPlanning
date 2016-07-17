@@ -22,7 +22,7 @@ export default class AddDutyWeekComponent implements OnInit {
     private workTypes: WorkType[] = []
     private selectedCoworkersIds: number[] = []
     private selectedWorkType: WorkType = null
-    private week: Week = new Week(0, 0, 0, 0, [], false)
+    private week: Week = new Week(0, 0, 0, 0, [], false, false)
 
     private selectedCoworkers(): Coworker[] {
         return this.coworkers.filter(x =>

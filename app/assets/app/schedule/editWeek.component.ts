@@ -14,7 +14,7 @@ export default class EditWeekComponent implements OnInit {
     private sub: any
     private error: string = ""
     private edit: boolean = false
-    private week: Week = new Week(0, 0, 0, 0, [], false)
+    private week: Week = new Week(0, 0, 0, 0, [], false, false)
     
     private check(res: string) {
        if(res !== "ok") {
