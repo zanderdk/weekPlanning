@@ -12,7 +12,7 @@
         </div>
         <ul>
             <li *ngFor="let week of weeks">
-                <span (click)="userExpandWeek(week.id)" class="sp"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
+                <span (click)="userExpandWeek(week.id)" class="sp label label-default"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
                 <div [hidden]="!canEdit">
                     <a [routerLink]="['/addDutyWeek', projectId, week.id]">
                         <spn class="label label-success">
@@ -43,7 +43,7 @@
                         </div>
                         <ul [hidden]="!day.expanded">
                             <li *ngFor="let duty of day.dutys">
-                                <span>{{duty.coworker.name}} - {{duty.workType.name}}</span>
+                                <span class="label label-info">{{duty.coworker.name}} - {{duty.workType.name}}</span>
                                 <a [hidden]="!canEdit" [routerLink]="['/editDuty', projectId, duty.id]">
                                     <spn class="label label-primary">
                                         <spn class="octicon octicon-pencil"></spn>

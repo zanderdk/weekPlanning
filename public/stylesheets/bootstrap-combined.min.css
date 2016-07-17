@@ -4715,6 +4715,10 @@ a.bg-danger:focus, a.bg-danger:hover {
   .hidden-print {
     display: none !important; } }
 
+.container {
+  width: 100%;
+  max-width: 100%; }
+
 .tree {
   border-radius: 4px;
   background-color: #fafafb;
@@ -4789,6 +4793,7 @@ a.bg-danger:focus, a.bg-danger:hover {
   .tree > ul > li::before, .tree > ul > li::after {
     border: 0; }
   .tree #jumbo {
-    padding: 0rem, 2rem; }
+    padding: 0rem, 2rem;
+    max-width: 100%; }
 
 /*# sourceMappingURL=bootstrap-combined.min.css.map */
