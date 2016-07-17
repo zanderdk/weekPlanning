@@ -54,6 +54,12 @@ export default class ScheduleComponent implements OnInit {
 
     }
 
+    print() {
+        let weekIds = this.weeks.filter(x => x.marked).map(x => x.id)
+        let json = JSON.stringify(weekIds)
+        window.location.href = "/makePrint?projectId=" + this.projectId + "&json=" + json;
+    }
+
     userExpandWeek(weekId: number) {
         let cookie = $.fn.cookieList('weekExpansions' + this.projectId)
         this.expandWeek(weekId).then(week => {
@@ -161,8 +167,8 @@ export default class ScheduleComponent implements OnInit {
             .then(res => this.check(res))
     }
 
-    delete(weekId:number) {
-        this.scheduleService.deleteWeek(new Week(weekId, this.projectId, 0, 0, [], false))
+    delete(weekId: number) {
+        this.scheduleService.deleteWeek(new Week(weekId, this.projectId, 0, 0, [], false, false))
             .then(res => {
                 let cookie = $.fn.cookieList('weekExpansions' + this.projectId)
                 cookie.remove(weekId)

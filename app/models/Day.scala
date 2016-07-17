@@ -54,6 +54,15 @@ case class Day(id: Int, weekId: Int, weekDay: WeekDay) {
     Await.result(DAL.getDutys(weekId), Duration.Inf).filter(d => d.dayId == id)
   }
 
+  lazy val jodaDate: DateTime = {
+    val year = week.year
+    val weekNo = week.weekNo
+    val dt:DateTime = new DateTime()
+    .withYear(year)
+    .withWeekOfWeekyear(weekNo).withDayOfWeek(weekDay.id)
+    dt
+  }
+
   def date(): String = {
     val year = week.year
     val weekNo = week.weekNo

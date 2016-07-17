@@ -35,6 +35,8 @@ GET     /addDutys                   weekplanning.controllers.ScheduleController.
 GET     /getDuty                    weekplanning.controllers.ScheduleController.getDuty(projectId: Int, dutyId: Int)
 GET     /updateDuty                 weekplanning.controllers.ScheduleController.updateDuty(projectId: Int, json: String)
 GET     /deleteDuty                 weekplanning.controllers.ScheduleController.deleteDuty(projectId:Int, dutyId:Int)
+GET     /print                      weekplanning.controllers.PrintController.print(projectId: Int, json: String, secret: String)
+GET     /makePrint                  weekplanning.controllers.PrintController.doPrint(projectId: Int, json: String)
 
 POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
 POST    /authenticate               weekplanning.controllers.Auth.authenticate

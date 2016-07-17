@@ -35,6 +35,7 @@ export class Week{
         public year: number,
         public weekNo: number,
         public days: Day[],
-        public expanded: boolean
+        public expanded: boolean,
+        public marked: boolean
     ) {}
 }

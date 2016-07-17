@@ -6,6 +6,9 @@
                     <span class="mega-octicon octicon-plus"></span>
                 </div>
             </a>
+            <div class="label label-success" (click)="print()">
+                <span class="mega-octicon octicon-checklist"></span>
+            </div>
         </div>
         <ul>
             <li *ngFor="let week of weeks">
@@ -26,6 +29,7 @@
                             <spn class="octicon octicon-x"></spn>
                         </spn>
                     </a>
+                    <input type="checkbox" [(ngModel)]="week.marked" />
                 </div>
                 <ul [hidden]="!week.expanded">
                     <li *ngFor="let day of week.days">

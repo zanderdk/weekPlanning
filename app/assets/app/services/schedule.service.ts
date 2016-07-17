@@ -98,6 +98,7 @@ export class ScheduleService {
         let weeks = data.map(w => {
             w['days'] = []
             w['expanded'] = false
+            w['marked'] = false
             return w
         })
         return weeks

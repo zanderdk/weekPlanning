@@ -1,0 +1,42 @@
+@(title:String, weeks:Seq[Week], person:Seq[Coworker], projectDays: Seq[Day])
+
+@main(title) {
+  @weeks.sortBy( (w) => (w.year, w.weekNo) ).map((x) =>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Uge {x.weekNo}</th>
+          { x.days.map( (x) => <th> { x.weekDay } </th> ) }
+          <th>Timer</th>
+          <th>Arbejds timer til nu</th>
+          <th>Norm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Dato:</th>
+          { x.days.map( (x) => <td> { x.date() } </td> ) }
+          <td>  </td>
+          <td>  </td>
+        </tr>
+      { person.map( (p) => {
+      <tr>
+        <th>{p.name}</th>
+        { x.days.map( (d) => <td>{
+          p.statusForDay(d)
+          }</td> ) }
+      <td>{
+          p.workTimeForWeek(x)
+      }</td>
+      <td>{ p.calcTimeToDate(x.days(6), x, projectDays).toString.take(5) } </td>
+
+      <td> {
+          p.norm(x, projectDays)
+      } </td>
+      </tr>
+      } ) }
+      </tbody>
+    </table>
+  <br/>
+  )
+}

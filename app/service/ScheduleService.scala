@@ -65,6 +65,26 @@ trait ScheduleService {
     k
   }
 
+  def getCoworkerDutys(coworkerId: Int): Future[Seq[Duty]] = {
+    db.run(dutys.filter(d => d.coworkerId === coworkerId).result)
+  }
+
+  def getAllDays(projectId: Int): Future[Seq[Day]] = {
+    val q = for {
+      w <- weeks if w.projectId === projectId
+      d <- days if w.id === d.weekId
+    } yield d
+    db.run(q.result)
+  }
+
+  def getAllDutysForCoworker(projectId: Int, coworkerId: Int): Future[Seq[(Int, Double)]] = {
+    val q = for {
+      d <- days
+      du <- dutys if du.dayId === d.id && du.coworkerId === coworkerId
+      w <- workTypes if w.id === du.workTypeId
+    } yield (d.id, w.time)
+    db.run(q.result)
+  }
 
   def getDutys(weekId: Int): Future[Seq[Duty]] = {
     val q = for {
