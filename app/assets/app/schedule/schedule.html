@@ -43,7 +43,7 @@
                         </div>
                         <ul [hidden]="!day.expanded">
                             <li *ngFor="let duty of day.dutys">
-                                <span class="label label-info">{{duty.coworker.name}} - {{duty.workType.name}}</span>
+                                <span class="label label-default">{{duty.coworker.name}} - {{duty.workType.name}}</span>
                                 <a [hidden]="!canEdit" [routerLink]="['/editDuty', projectId, duty.id]">
                                     <spn class="label label-primary">
                                         <spn class="octicon octicon-pencil"></spn>
