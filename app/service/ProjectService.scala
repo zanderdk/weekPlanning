@@ -24,7 +24,7 @@ trait ProjectService {
   def getWeeks(projectId: Int): Future[Seq[Week]]
   def getWorkTypeProjectId(id: Int): Future[Option[Int]]
   def deleteWorkType(id: Int): Future[Try[String]]
-  def getCoworker(projectId: Int): Future[Seq[Coworker]]
+  def getCoworkers(projectId: Int): Future[Seq[Coworker]]
   def deleteCoworker(projectId: Int, name:String): Future[Try[String]]
   def getWorkTypes(projectId: Int): Future[Seq[WorkType]]
 
@@ -130,7 +130,7 @@ trait ProjectService {
 
   def deleteProject(id: Int): Future[Try[Int]] = {
     val getQ = for {
-      co <- getCoworker(id)
+      co <- getCoworkers(id)
       we <- getWeeks(id)
       wo <- getWorkTypes(id)
     } yield (co, we, wo)

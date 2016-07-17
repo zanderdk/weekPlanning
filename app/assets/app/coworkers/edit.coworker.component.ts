@@ -18,13 +18,13 @@ export default class EditCoworkersComponent implements OnInit {
     private projectId: number = 0
     private visability: string = ""
     private sub: any
-    private name: string = ""
     private menuService: MenuService
     private error: string = ""
     private coworkers: Coworker[] = []
     private edit: boolean = false
     private initName: string = ""
-    
+    private coworker: Coworker = new Coworker(0, 0, 0, "")
+
     private check(res: string) {
        if(res !== "ok") {
            this.error = res
@@ -46,12 +46,16 @@ export default class EditCoworkersComponent implements OnInit {
             let id = +params['id']
             let name = (params['name'] === undefined)? "" : params['name']
             this.projectId = id // (+) converts string 'id' to a number
-            this.name = name
+            this.coworker.name = name
             this.initName = name
             this.edit = (name === "")? false : true
             this.userService.getUsersVisabilityForProject(this.projectId)
                 .then(res => {
                     this.viability = res
+                })
+            this.coworkerService.getCoworker(this.projectId, this.coworker.name)
+                .then(res => {
+                    this.coworker = res
                 })
         })
     }
@@ -66,9 +70,9 @@ export default class EditCoworkersComponent implements OnInit {
     
     save() {
         if(!this.edit) {
-            this.coworkerService.addCoworker(this.projectId, this.name).then(res => this.check(res))
+            this.coworkerService.addCoworker(this.projectId, this.coworker).then(res => this.check(res))
         } else {
-            this.coworkerService.updateCoworker(this.projectId, this.initName, this.name).then(res => this.check(res))
+            this.coworkerService.updateCoworker(this.projectId, this.coworker).then(res => this.check(res))
         }
     }
 

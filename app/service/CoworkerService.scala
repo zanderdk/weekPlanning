@@ -1,6 +1,6 @@
 package service
 
-import models.{Coworker, CoworkerTableDef, WorkType}
+import models.{Coworker, CoworkerTableDef, DutyTableDef, WorkType}
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
 
@@ -16,24 +16,37 @@ trait CoworkerService {
 
   val db:JdbcProfile#Backend#Database
   val coworkers = TableQuery[CoworkerTableDef]
+  val dutys:TableQuery[DutyTableDef]
 
   def createCoworkerSchema(): Unit ={
     db.run(coworkers.schema.create)
   }
 
 
-  def updateCoworker(projectId: Int, oldName: String, name: String): Future[Try[String]] = {
-    val q = for { c <- coworkers if c.name === oldName } yield c.name
-    val k = q.update(name).map(i => if(i > 0) Success("ok") else Failure{ new Exception("inger bruger med det navn")})
+  def updateCoworker(projectId: Int, coworker: Coworker): Future[Try[String]] = {
+    val q = for { c <- coworkers if c.name === coworker.name } yield (c.name, c.time)
+    val k = q.update(coworker.name, coworker.time).map(i => if(i > 0) Success("ok") else Failure{ new Exception("inger bruger med det navn")})
     db.run(k)
   }
 
   def deleteCoworker(projectId: Int, name:String): Future[Try[String]] = {
-    db.run(coworkers.filter(c => c.projectId === projectId && c.name === name).delete)
-      .map(i => if(i > 0) Success("ok") else Failure(new Exception("ingen person med dette navn.")))
+    val coworker = Await.result(getCoworker(projectId, name), Duration.Inf)
+
+    coworker match {
+      case None => Future{ Failure(new Exception("denne medarbejer findes ikke")) }
+      case Some(cow) => {
+        Await.result(db.run(dutys.filter(d => d.coworkerId === cow.id).delete), Duration.Inf)
+        db.run(coworkers.filter(c => c.projectId === projectId && c.name === name).delete)
+          .map(i => if(i > 0) Success("ok") else Failure(new Exception("ingen person med dette navn.")))
+      }
+    }
   }
 
-  def getCoworker(projectId: Int): Future[Seq[Coworker]] = {
+  def getCoworker(projectId: Int, name: String): Future[Option[Coworker]] = {
+    db.run(coworkers.filter(c => c.projectId === projectId && c.name === name).result.headOption)
+  }
+
+  def getCoworkers(projectId: Int): Future[Seq[Coworker]] = {
      val query = for {
       c <- coworkers if c.projectId === projectId
     } yield c

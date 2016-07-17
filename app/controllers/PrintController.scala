@@ -51,7 +51,7 @@ class PrintController extends Controller with Secured {
       val weeks = Await.result(DAL.getWeeks(projectId), Duration.Inf)
           .filter(w => weekIds.contains(w.id))
 
-      val coworkers = Await.result(DAL.getCoworker(projectId), Duration.Inf)
+      val coworkers = Await.result(DAL.getCoworkers(projectId), Duration.Inf)
       val days = Await.result(DAL.getAllDays(projectId), Duration.Inf)
 
       Ok(views.html.print("print", weeks, coworkers, days))

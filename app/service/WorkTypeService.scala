@@ -1,6 +1,6 @@
 package service
 
-import models.{WorkTypeTableDef, WorkType}
+import models.{DutyTableDef, WorkType, WorkTypeTableDef}
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
 
@@ -15,6 +15,7 @@ trait WorkTypeService {
 
   val db:JdbcProfile#Backend#Database
   val workTypes = TableQuery[WorkTypeTableDef]
+  val dutys:TableQuery[DutyTableDef]
 
   def createWorkTypeSchema(): Unit ={
     db.run(workTypes.schema.create)
@@ -52,6 +53,7 @@ trait WorkTypeService {
   }
 
   def deleteWorkType(id: Int): Future[Try[String]] = {
+    Await.result(db.run(dutys.filter(d => d.workTypeId === id).delete), Duration.Inf)
     db.run(workTypes.filter(w => w.id === id).delete)
       .map(i => if(i < 1) Failure(new Exception("Denne vagt type findes ikke")) else Success("ok") )
   }

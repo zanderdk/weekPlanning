@@ -5,6 +5,7 @@
     <thead>
       <tr>
         <th>Medarbejders navn</th>
+          <th>timer per arbejdsuge</th>
         <th>
             <a [hidden]="!canEdit" [routerLink]="['/editCoworker', projectId]">
                 <span class="octicon octicon-plus"></span>
@@ -15,6 +16,9 @@
       <tr *ngFor="let worker of (coworkers | coworkerFilter:name)">
           <td>
             {{worker.name}}
+          </td>
+          <td>
+              {{worker.time}}
           </td>
           <td>
             <a [hidden]="!canEdit" [routerLink]="['/editCoworker', projectId, worker.name]"><span class="octicon octicon-pencil"></span></a>

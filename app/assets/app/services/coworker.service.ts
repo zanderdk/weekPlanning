@@ -9,13 +9,19 @@ export class CoworkerService {
     
     private updateCoworkerUrl = "/updateCoworker"
     private addCoworkerUrl = "/coworkersAdd"
-    private getCoworkerUrl = "/coworkers"
+    private getCoworkersUrl = "/coworkers"
+    private getCoworkerUrl = "/getCoworker"
     private deleteCoworkerUrl = "/deleteCoworker"
     
     constructor(@Inject(Http) private http:Http) { }
     
     public getCoworkers(projectId: number): Promise<Coworker[]> {
-        return this.http.get(this.getCoworkerUrl + "?id=" + projectId).toPromise()
+        return this.http.get(this.getCoworkersUrl + "?id=" + projectId).toPromise()
+            .then(this.extractData)
+    }
+
+    public getCoworker(projectId: number, coworkerName: string): Promise<Coworker> {
+        return this.http.get(this.getCoworkerUrl + "?projectId=" + projectId + "&name=" + coworkerName).toPromise()
             .then(this.extractData)
     }
     
@@ -24,13 +30,15 @@ export class CoworkerService {
             .toPromise().then(res => res.text())
     }
     
-    public addCoworker(projectId: number, name: string): Promise<string> {
-        return this.http.get(this.addCoworkerUrl + "?id=" + projectId + "&name=" + name).toPromise()
+    public addCoworker(projectId: number, coworker: Coworker): Promise<string> {
+        let json = JSON.stringify(coworker)
+        return this.http.get(this.addCoworkerUrl + "?id=" + projectId + "&json=" + json).toPromise()
             .then(res => res.text())
     }
     
-    public updateCoworker(projectId: number, old:string, name:string): Promise<string> {
-        return this.http.get(this.updateCoworkerUrl + "?id=" + projectId + "&oldName=" + old + "&name=" + name)
+    public updateCoworker(projectId: number, coworker: Coworker): Promise<string> {
+        let json = JSON.stringify(coworker)
+        return this.http.get(this.updateCoworkerUrl + "?id=" + projectId + "&json=" + json)
             .toPromise().then(res => res.text())
     }
     

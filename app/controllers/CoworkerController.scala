@@ -9,8 +9,9 @@ import weekplanning.controllers.Secured
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import models.Coworker.coworkerFormats
-import scala.concurrent.ExecutionContext.Implicits.global
+import weekplanning.models.Level
 
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
 class CoworkerController extends Controller with Secured {
@@ -18,7 +19,7 @@ class CoworkerController extends Controller with Secured {
   def getCoworkers(id: Int) = withAuth { username => implicit request =>
     val k = for {
      x <- DAL.getUserLevel(id, username)
-     z <- DAL.getCoworker(id)
+     z <- DAL.getCoworkers(id)
     } yield (x, z)
 
     val res = Await.result(k, Duration.Inf)
@@ -33,19 +34,24 @@ class CoworkerController extends Controller with Secured {
     Ok(Json.toJson(seq))
   }
 
+  def getCoworker(projectId: Int, name: String) = withAuth { username => implicit request =>
+    DAL.checkUser(projectId, username, Level.Read) {check =>
+       if(!check) Ok("du har ikke retighed til at ændre dette projekt") else {
+         Await.result(DAL.getCoworker(projectId, name), Duration.Inf) match {
+           case Some(x) => Ok(Json.toJson(x))
+           case None => Ok("ingen coworker med det navn")
+         }
+       }
+    }
+  }
 
-
-  def updateCoworker(id: Int, oldName:String, name: String) = withAuth { username => implicit request =>
+  def updateCoworker(id: Int, json: String) = withAuth { username => implicit request =>
+    val coworker = Json.parse(json).as[Coworker]
     Await.result(DAL.getUserLevel(id, username), Duration.Inf).map(l => {
       if(l.id >= 1) {
-        Await.result(DAL.getCoworker(id), Duration.Inf).find(c => c.name == name) match {
-          case Some(_) => Ok("allerede en bruger med dette navn.")
-          case None => {
-            Await.result(DAL.updateCoworker(id, oldName, name), Duration.Inf) match {
-              case Success(x) => Ok(x)
-              case Failure(e) => Ok(e.getMessage)
-            }
-          }
+        Await.result(DAL.updateCoworker(id, coworker),Duration.Inf) match {
+          case Success(x) => Ok("ok")
+          case Failure(ex) => Ok(ex.getMessage)
         }
       } else {
         Ok("Du har ikke retigheder til at ændre denne plan.")
@@ -53,12 +59,13 @@ class CoworkerController extends Controller with Secured {
     }).getOrElse( Ok("Du har ikke retigheder til at ændre denne plan.") )
   }
 
-  def addCoworkers(id: Int, name: String) = withAuth { username => implicit request =>
+  def addCoworkers(id: Int, json: String) = withAuth { username => implicit request =>
+    val coworker = Json.parse(json).as[Coworker]
     Await.result(DAL.getUserLevel(id, username), Duration.Inf).map(l => {
       if(l.id >= 1) {
-        Await.result(DAL.getCoworker(id), Duration.Inf).find(c => c.name == name)
+        Await.result(DAL.getCoworkers(id), Duration.Inf).find(c => c.name == coworker.name)
           .map(_ => Ok("allerede en bruger med det navn")).getOrElse(
-          Await.result(DAL.addCoworker(Coworker(0, id, 37.0, name)), Duration.Inf) match {
+          Await.result(DAL.addCoworker(Coworker(0, id, coworker.time, coworker.name)), Duration.Inf) match {
             case Success(_) => Ok("ok")
             case Failure(e) => Ok(e.getMessage)
           }
