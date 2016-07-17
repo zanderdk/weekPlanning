@@ -63,6 +63,8 @@ case class Day(id: Int, weekId: Int, weekDay: WeekDay) {
     dt
   }
 
+  lazy val dayOfWeek = WeekDay.weekDayToString(weekDay)
+
   def date(): String = {
     val year = week.year
     val weekNo = week.weekNo
