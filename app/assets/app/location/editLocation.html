@@ -1,0 +1,23 @@
+<form>
+  <div class="control-group">
+    <label>Lokations navn</label>
+    <input [(ngModel)]="location.name" type="text" class="form-control">
+    <span [hidden]="location.name.length > 0"> Navn skal udfyldes.<br/></span>
+    <br/>
+    <span [(colorPicker)]="color"
+      [cpPosition]="'bottom'"
+      [style.color]="'#' + '000'"
+      [style.background]="color"
+      [cpPositionOffset]="'50%'"
+      [cpPositionRelativeToArrow]="true">Lokations farve</span>
+  </div>
+  <br/>
+  <div [hidden]="error.length == 0" class="alert alert-danger">
+    {{error}}
+  </div>
+  <div class="btn-group">
+      <button (click)="cancel()" type="button" class="btn btn-default">Anuller</button>
+      <button [hidden]="!edit" (click)="delete()" type="button" class="btn btn-danger">Slet</button>
+      <button [disabled]="location.name.length <= 0" (click)="save()" type="button" class="btn btn-primary">Gem</button>
+  </div>
+</form>

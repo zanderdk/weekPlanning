@@ -7,6 +7,8 @@ import {Coworker} from "../services/coworkerClasses"
 import {CoworkerService} from "../services/coworker.service"
 import {WorkType} from "../services/workTypeClasses"
 import {WorkTypeService} from "../services/workType.service"
+import {Location} from "../services/locationClasses"
+import {LocationService} from "../services/location.service"
 
 @Component({
     selector: "editDuty",
@@ -20,7 +22,9 @@ export default class EditDutyComponent implements OnInit {
     private projectId: number = 0
     private coworkers: Coworker[] = []
     private workTypes: WorkType[] = []
-    private duty: Duty = new Duty(0, 0, 0, 0, null, null)
+    private duty: Duty = new Duty(0, 0, 0, 0, 0, null, null, null)
+    private locations: Location[] = []
+    private selectedLocation: Location = []
 
     initSelect2(data: Any[] ) {
         return $(".js-example-basic-single").select2({
@@ -34,8 +38,15 @@ export default class EditDutyComponent implements OnInit {
              })
         };
 
+     initSelect23(data: Any[] ) {
+        return $(".js-example-basic-single3").select2({
+             data: data
+             })
+        };
+
     constructor (
         @Inject(ScheduleService) private scheduleService: ScheduleService,
+        @Inject(LocationService) private locationService: LocationService,
         @Inject(CoworkerService) private coworkerService: CoworkerService,
         @Inject(WorkTypeService) private workTypeService: WorkTypeService,
         @Inject(Router) private router: Router,
@@ -88,16 +99,44 @@ export default class EditDutyComponent implements OnInit {
                             this.duty.workTypeId = work.id
                         })
 
-                    this.scheduleService.getDuty(this.projectId, this.duty.id).then(res => {
-                        this.duty = res
-                        let coworkerId = this.duty.coworker.id
-                        let id = this.duty.workType.id
-                         sel22.val(id).trigger("change");
-                         sel2.val(coworkerId).trigger("change");
-                    })
+
+                        this.locationService.getLocations(id).then(res => {
+                            this.locations = res
+                            this.duty.location = res[0]
+                            let data = this.locations.map(x => {
+                                return {'id': x.id, 'text': x.name}
+                            })
+                            let sel23 = this.initSelect23(data)
+                            $(".js-example-basic-single3").on(
+                                'select2:select',
+                                (e) => {
+                                    let id = +e.params.data.id
+                                    let arr = this.locations
+                                    let loc = arr.find(x => {
+                                        return (x.id === id)
+                                    })
+                                    this.duty.location = loc
+                                    this.duty.locationId = loc.id
+                                }
+                            )
+
+                             this.scheduleService.getDuty(this.projectId, this.duty.id).then(res => {
+                                this.duty = res
+                                let coworkerId = this.duty.coworker.id
+                                let id = this.duty.workType.id
+                                 let locationId = this.duty.locationId
+                                 sel22.val(id).trigger("change")
+                                 sel2.val(coworkerId).trigger("change")
+                                 sel23.val(locationId).trigger("change")
+                            })
+
+                        })
+
                 })
 
             })
+
+
 
 
         })

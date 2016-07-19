@@ -7,14 +7,18 @@ import { UserService } from "./services/user.service"
 import {CoworkerService} from "./services/coworker.service"
 import {WorkTypeService} from "./services/workType.service"
 import {ScheduleService} from "./services/schedule.service"
+import {LocationService} from "./services/location.service"
+import {ColorPickerService} from "./color-picker/color-picker.service"
 
 import "./rxjs-operators"
 
 bootstrap(AppComponent,
-    [APP_ROUTER_PROVIDERS,
+    [   ColorPickerService,
+        APP_ROUTER_PROVIDERS,
         HTTP_PROVIDERS,
         ProjectService,
         UserService,
         CoworkerService,
         WorkTypeService,
+        LocationService,
         ScheduleService])

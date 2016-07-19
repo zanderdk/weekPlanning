@@ -1,0 +1,25 @@
+<input type="text" class="form-control search-query" [(ngModel)]="name" placeholder="Søg">
+
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Lokations navn</th>
+        <th>
+            <a [hidden]="!canEdit" [routerLink]="['/editLocation', projectId, 0]">
+                <span class="octicon octicon-plus"></span>
+            </a>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let location of (locations | locationFilter:name)">
+          <td >
+            <span [style.color]="'#' + '000'" [style.background]="'#' + location.color" >{{location.name}}</span>
+          </td>
+          <td>
+            <a [hidden]="!canEdit" [routerLink]="['/editLocation', projectId, location.id]"><span class="octicon octicon-pencil"></span></a>
+          </td>
+      </tr>
+      </tbody>
+  </table>
+</div>

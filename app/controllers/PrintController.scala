@@ -54,7 +54,7 @@ class PrintController extends Controller with Secured {
       val coworkers = Await.result(DAL.getCoworkers(projectId), Duration.Inf)
       val days = Await.result(DAL.getAllDays(projectId), Duration.Inf)
 
-      Ok(views.html.print("print", weeks, coworkers, days))
+      Ok(views.html.print.render("print", weeks, coworkers, days))
     }
     else {
       Ok("du har ikke retighed til at se dette projekt.")

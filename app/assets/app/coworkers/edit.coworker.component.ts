@@ -53,10 +53,12 @@ export default class EditCoworkersComponent implements OnInit {
                 .then(res => {
                     this.viability = res
                 })
-            this.coworkerService.getCoworker(this.projectId, this.coworker.name)
-                .then(res => {
-                    this.coworker = res
-                })
+            if(this.edit) {
+                this.coworkerService.getCoworker(this.projectId, this.coworker.name)
+                    .then(res => {
+                        this.coworker = res
+                    })
+            }
         })
     }
     

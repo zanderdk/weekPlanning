@@ -9,6 +9,7 @@ class DAL(dbName: String) extends
   ProjectService with
   CoworkerService with
   ScheduleService with
+  LocationService with
   WorkTypeService {
   val dbConfig = DatabaseConfigProvider.get[JdbcProfile](dbName)(Play.current)
   override val db = dbConfig.db

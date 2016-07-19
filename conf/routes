@@ -38,6 +38,12 @@ GET     /updateDuty                 weekplanning.controllers.ScheduleController.
 GET     /deleteDuty                 weekplanning.controllers.ScheduleController.deleteDuty(projectId:Int, dutyId:Int)
 GET     /print                      weekplanning.controllers.PrintController.print(projectId: Int, json: String, secret: String)
 GET     /makePrint                  weekplanning.controllers.PrintController.doPrint(projectId: Int, json: String)
+GET     /getLocation                weekplanning.controllers.LocationController.getLocation(projectId: Int, locationId: Int)
+GET     /getLocations               weekplanning.controllers.LocationController.getLocations(projectId: Int)
+GET     /addLocation                weekplanning.controllers.LocationController.addLocation(json: String)
+GET     /updateLocation             weekplanning.controllers.LocationController.updateLocation(json: String)
+GET     /deleteLocation             weekplanning.controllers.LocationController.deleteLocation(projectId: Int, locationId: Int)
+
 
 POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
 POST    /authenticate               weekplanning.controllers.Auth.authenticate

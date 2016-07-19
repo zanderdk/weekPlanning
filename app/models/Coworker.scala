@@ -1,6 +1,7 @@
 package models
 
 import play.api.libs.json.Json
+import play.twirl.api.Html
 import service.DAL
 import slick.driver.PostgresDriver.api._
 import weekplanning.models.ProjectTableDef
@@ -8,7 +9,7 @@ import weekplanning.models.ProjectTableDef
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 
-case class Coworker(id: Int, ProjectId: Int, time: Double, name: String) {
+case class Coworker(id: Int, projectId: Int, time: Double, name: String) {
 
   def dutys = {
     Await.result(DAL.getCoworkerDutys(id), Duration.Inf)
@@ -43,11 +44,12 @@ case class Coworker(id: Int, ProjectId: Int, time: Double, name: String) {
       .map(_.workType.time).sum.toString.take(5)
   }
 
-  def statusForDay(day: Day): String = {
+  def statusForDay(day: Day): Seq[(String, String)] = {
     val dutys = day.dutys
-    if(dutys.isEmpty) "Lukket" else {
-      dutys.filter(d => d.coworkerId == id).map(d => d.workType.name)
-        .fold("")(_ + ", " + _).drop(2)
+    if(dutys.isEmpty) Seq(("Lukket", "#fff")) else {
+      val lst = dutys.filter(d => d.coworkerId == id).map(d => (d.workType.name, d.location.color))
+      val ll = lst.map{ case (x, y) => (x, "#" + y) }
+      ll
     }
   }
 

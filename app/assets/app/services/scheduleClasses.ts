@@ -1,5 +1,6 @@
-import Coworker from "./coworker.service"
-import WorkType from "./workType.service"
+import Coworker from "./coworkerClasses"
+import WorkType from "./workTypeClasses"
+import Location from "./locationClasses"
 
 export class Day{
     constructor(
@@ -22,8 +23,10 @@ export class Duty{
         public dayId: number,
         public coworkerId: number,
         public workTypeId: number,
+        public locationId: number,
         public coworker: Coworker,
-        public workType: WorkType
+        public workType: WorkType,
+        public location: Location
     ) { }
 
 }

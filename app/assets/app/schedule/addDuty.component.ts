@@ -7,6 +7,8 @@ import {Coworker} from "../services/coworkerClasses"
 import {CoworkerService} from "../services/coworker.service"
 import {WorkType} from "../services/workTypeClasses"
 import {WorkTypeService} from "../services/workType.service"
+import {Location} from "../services/locationClasses"
+import {LocationService} from "../services/location.service"
 
 @Component({
     selector: "addDuty",
@@ -23,6 +25,8 @@ export default class AddDutyComponent implements OnInit {
     private selectedCoworkersIds: number[] = []
     private selectedWorkType: WorkType = null
     private dayId: number
+    private locations: Location[] = []
+    private selectedLocation: Location = null
 
     private selectedCoworkers(): Coworker[] {
         return this.coworkers.filter(x =>
@@ -46,9 +50,16 @@ export default class AddDutyComponent implements OnInit {
              })
         };
 
+    initSelect23(data: Any[] ) {
+        $(".js-example-basic-single3").select2({
+             data: data
+             })
+        };
+
     constructor (
         @Inject(ScheduleService) private scheduleService: ScheduleService,
         @Inject(CoworkerService) private coworkerService: CoworkerService,
+        @Inject(LocationService) private locationService: LocationService,
         @Inject(WorkTypeService) private workTypeService: WorkTypeService,
         @Inject(Router) private router: Router,
         @Inject(ActivatedRoute) private route: ActivatedRoute) { }
@@ -101,6 +112,26 @@ export default class AddDutyComponent implements OnInit {
 
             })
 
+            this.locationService.getLocations(id).then(res => {
+                this.locations = res
+                this.selectedLocation = res[0]
+                let data = this.locations.map(x => {
+                    return {'id': x.id, 'text': x.name}
+                })
+                this.initSelect23(data)
+                $(".js-example-basic-single3").on(
+                    'select2:select',
+                    (e) => {
+                        let id = +e.params.data.id
+                        let arr = this.locations
+                        let loc = arr.find(x => {
+                            return (x.id === id)
+                        })
+                        this.selectedLocation = loc
+                    }
+                )
+            })
+
 
         })
     }
@@ -120,8 +151,9 @@ export default class AddDutyComponent implements OnInit {
 
     private dutys(): Duty[] {
         let work = this.selectedWorkType
+        let loc = this.selectedLocation
         let dutys = this.selectedCoworkers().map(x => {
-            return new Duty(0, this.dayId, x.id, work.id, x, work)
+            return new Duty(0, this.dayId, x.id, work.id, loc.id, x, work, loc)
         })
         return dutys
     }

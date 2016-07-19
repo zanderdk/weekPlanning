@@ -15,6 +15,7 @@ trait ScheduleService {
   val dutys = TableQuery[DutyTableDef]
   val coworkers: TableQuery[CoworkerTableDef]
   val workTypes: TableQuery[WorkTypeTableDef]
+  val locations: TableQuery[LocationTableDef]
 
   def createWeekSchema(): Unit = {
     db.run(weeks.schema.create)
@@ -56,7 +57,7 @@ trait ScheduleService {
     val k = db.run(q.result).map(x => {
       x.map(y => {
         val dutyTup = Duty.unapply(y._1).get
-        new Duty(dutyTup._1, dutyTup._2, dutyTup._3, dutyTup._4) {
+        new Duty(dutyTup._1, dutyTup._2, dutyTup._3, dutyTup._4, dutyTup._5) {
           override lazy val coworker: Coworker = y._2
           override lazy val workType: WorkType = y._3
         }
@@ -97,7 +98,7 @@ trait ScheduleService {
     val k = db.run(q.result).map(x => {
       x.map(y => {
         val dutyTup = Duty.unapply(y._1).get
-        new Duty(dutyTup._1, dutyTup._2, dutyTup._3, dutyTup._4) {
+        new Duty(dutyTup._1, dutyTup._2, dutyTup._3, dutyTup._4, dutyTup._5) {
           override lazy val coworker: Coworker = y._2
           override lazy val workType: WorkType = y._3
         }
@@ -131,8 +132,8 @@ trait ScheduleService {
 
   def updateDuty(duty: Duty): Future[Try[String]] = {
     val id = duty.id
-    val q = for { d <- dutys if d.id === id } yield (d.coworkerId, d.workTypeId)
-    val k = q.update((duty.coworkerId, duty.workTypeId)).map(i => if(i > 0) Success("ok") else Failure{ new Exception("denne vagt findes ikke.")})
+    val q = for { d <- dutys if d.id === id } yield (d.coworkerId, d.workTypeId, d.locationId)
+    val k = q.update((duty.coworkerId, duty.workTypeId, duty.locationId)).map(i => if(i > 0) Success("ok") else Failure{ new Exception("denne vagt findes ikke.")})
     db.run(k)
   }
 

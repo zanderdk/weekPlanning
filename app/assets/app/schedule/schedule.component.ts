@@ -84,13 +84,13 @@ export default class ScheduleComponent implements OnInit {
     }
 
     autoExpandRest(week: Week) {
-        let rest = this.restExpand
-            rest.forEach(x => {
-            week.days.forEach(day => {
-                if(day.id === x) {
-                    this.autoExpandDay(day)
-                }
-            })
+        let rest = this.restExpand.slice()
+            rest.map(x => {
+                week.days.map(day => {
+                    if(day.id === x) {
+                        this.autoExpandDay(day)
+                    }
+                })
         })
     }
 

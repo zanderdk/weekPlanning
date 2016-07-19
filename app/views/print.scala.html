@@ -1,8 +1,9 @@
 @(title:String, weeks:Seq[Week], person:Seq[Coworker], projectDays: Seq[Day])
 
 @main(title) {
+  <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/print.css")">
   @weeks.sortBy( (w) => (w.year, w.weekNo) ).map((x) =>
-    <table class="table">
+    <table class="table" style="border: 1px solid black">
       <thead>
         <tr>
           <th>Uge {x.weekNo}</th>
@@ -18,13 +19,17 @@
           { x.days.map( (x) => <td> { x.date() } </td> ) }
           <td>  </td>
           <td>  </td>
+          <td>  </td>
         </tr>
       { person.map( (p) => {
       <tr>
         <th>{p.name}</th>
-        { x.days.map( (d) => <td>{
-          p.statusForDay(d)
-          }</td> ) }
+        { x.days.map( (d) =>
+        <td>
+            { p.statusForDay(d).map(x =>
+            <span style={ "background-color:" + x._2 }>{x._1}</span>
+        ) }
+        </td> ) }
       <td>{
           p.workTimeForWeek(x)
       }</td>
