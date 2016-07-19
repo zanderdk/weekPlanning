@@ -44,6 +44,13 @@
     });
 })(jQuery);
 
+Array.prototype.max = function() {
+  return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+  return Math.min.apply(null, this);
+};
 
 function flatten(array, mutable) {
     var toString = Object.prototype.toString;

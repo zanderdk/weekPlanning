@@ -31,6 +31,35 @@ export default class ScheduleComponent implements OnInit {
             }
         )
     }
+
+    togleMark(id: number) {
+        let week = this.weeks.find(w => w.id === id)
+        if(!week.marked) {
+            this.mark(id)
+        } else {
+            week.marked = false
+        }
+    }
+
+    mark(id: number) {
+        let week = this.weeks.find(w => w.id === id)
+        let idList = this.weeks.map(x => x.id)
+        let index = idList.indexOf(id)
+        let filteredIndexList = this.weeks.filter(x => x.marked).map(x => idList.indexOf(x.id))
+        let maxIndex = filteredIndexList.max()
+        let minIndex = filteredIndexList.min()
+        let bol = (index > maxIndex || index < minIndex)
+        let max = (index > maxIndex)? index : maxIndex
+        let min = (index < minIndex)? index : minIndex
+        if(bol) {
+            let betweek = _.range(min, max+1).map(x => this.weeks[x])
+            betweek.forEach(x => {
+                x.marked = true
+            })
+        } else {
+            this.weeks[index].marked = true
+        }
+    }
     
     constructor (
         @Inject(ProjectService) private projectService: ProjectService,
