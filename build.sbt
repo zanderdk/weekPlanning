@@ -6,11 +6,14 @@ lazy val `weekplanning` = (project in file(".")).enablePlugins(PlayJava)
 
 scalaVersion := "2.11.7"
 
+resolvers ++= Seq("RoundEights" at "http://maven.spikemark.net/roundeights")
+
 libraryDependencies ++= Seq(
   cache,
   javaWs,
   specs2 % Test,
   "com.h2database" % "h2" % "1.3.175",
+  "com.roundeights" %% "hasher" % "1.2.0",
   "com.typesafe.slick" %% "slick" % "3.1.0",
   "com.typesafe.play" %% "play-slick" % "2.0.0",
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",

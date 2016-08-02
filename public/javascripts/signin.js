@@ -55,7 +55,7 @@ $(function() {
 
 function signin() {
     var username = $("#username").val();
-    var password = $("#password").val();
+    var password = SHA512($("#password").val());
 	var data = {"password": password, "username": username};
 	$.post("/signinInitCheck", data).done(function (res) {
 		if(res != "ok") {
@@ -74,9 +74,9 @@ function signin() {
 
 function register() {
 	var username = $("#usernameReg").val();
-	var passowrd = $("#passwordReg").val();
+	var passowrd = SHA512($("#passwordReg").val());
 	var email = $("#emailReg").val();
-	var confirm = $("#confirmPasswordReg").val();
+	var confirm = SHA512($("#confirmPasswordReg").val());
 	var errorBox = $("#errorReg");
 	if(passowrd != confirm) {
 		errorBox.show();
