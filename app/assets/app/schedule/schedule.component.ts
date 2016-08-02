@@ -28,6 +28,8 @@ export default class ScheduleComponent implements OnInit {
     private deleteFunc: () => void = () => {}
 
     refresh() {
+        this.menuService = new MenuService(this.projectId, this.router)
+        this.menuService.initDefaults(0)
          this.scheduleService.getWeeks(this.projectId).then( w => {
                 this.weeks = w
                 this.autoExpand()
@@ -80,8 +82,7 @@ export default class ScheduleComponent implements OnInit {
                     this.canEdit = (res === "Read")? false : true
                 })
         })
-        this.menuService = new MenuService(this.projectId, this.router)
-        this.menuService.initDefaults(0)
+
         this.refresh()
 
     }
