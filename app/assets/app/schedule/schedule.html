@@ -33,7 +33,7 @@
         </div>
         <ul>
             <li *ngFor="let week of weeks">
-                <span (click)="userExpandWeek(week.id)" class="sp label label-default"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
+                <span (click)="userExpandWeek(week.id)" class="noSelect sp label label-default"><i class="octicon octicon-calendar"></i> {{week.year}}, uge {{week.weekNo}}</span>
                 <div [hidden]="!canEdit">
                     <a [routerLink]="['/addDutyWeek', projectId, week.id]">
                         <spn class="label label-success">
@@ -56,7 +56,7 @@
                 </div>
                 <ul [hidden]="!week.expanded">
                     <li *ngFor="let day of week.days">
-                        <span (click)="userExpandDay(day.id)" class="label sp label-{{day.color()}}"><i [hidden]="day.expanded" class="octicon octicon-plus" ></i> <i [hidden]="!day.expanded" class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
+                        <span (click)="userExpandDay(day.id)" class="noSelect label sp label-{{day.color()}}"><i [hidden]="day.expanded" class="octicon octicon-plus" ></i> <i [hidden]="!day.expanded" class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
                         <div>
                             <a [hidden]="!canEdit" [routerLink]="['/addDuty', projectId, day.id]">
                                 <spn class="label label-success">
@@ -66,7 +66,7 @@
                         </div>
                         <ul [hidden]="!day.expanded">
                             <li *ngFor="let duty of day.dutys">
-                                <span [style.color]="'#' + '000'" [style.background]="'#' + duty.location.color" class="label label-info">{{duty.coworker.name}} - {{duty.location.name}} - {{duty.workType.name}}</span>
+                                <span [style.color]="'#' + '000'" [style.background]="'#' + duty.location.color" class="noSelect label label-info">{{duty.coworker.name}} - {{duty.location.name}} - {{duty.workType.name}}</span>
                                 <a [hidden]="!canEdit" [routerLink]="['/editDuty', projectId, duty.id]">
                                     <spn class="label label-primary">
                                         <spn class="octicon octicon-pencil"></spn>

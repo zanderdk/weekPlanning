@@ -30,7 +30,7 @@ export class MenuService {
         let bar = $("#navbar-nav-right")
         let ht = $("<li class='nav-item'></li>")
         let htd = (!active)? ht : ht.addClass("active")
-        let htt = htd.append("<a href='" + link + "' class='nav-link fake-link'>" + name + "</a>")
+        let htt = htd.append("<a href='" + link + "' class='noSelect nav-link fake-link'>" + name + "</a>")
         bar.append(htt)
     }
 
@@ -39,7 +39,7 @@ export class MenuService {
         let bar = $("#navbar-nav-right")
         let ht = $("<li class='nav-item'></li>")
         let htd = (!active)? ht : ht.addClass("active")
-        let htt = htd.append("<span class='nav-link fake-link'>" + name + "</span>")
+        let htt = htd.append("<span class='noSelect nav-link fake-link'>" + name + "</span>")
             .on('click', e => {
                 let l = [link];
                 this.router.navigate(l);
@@ -52,7 +52,7 @@ export class MenuService {
         let bar = $("#navbar-nav")
         let ht = $("<li class='nav-item'></li>")
         let htd = (!active)? ht : ht.addClass("active")
-        let htt = htd.append("<span class='nav-link fake-link'>" + name + "</span>")
+        let htt = htd.append("<span class='noSelect nav-link fake-link'>" + name + "</span>")
             .on('click', e => {
                 let l = [link];
                 this.router.navigate(l);
