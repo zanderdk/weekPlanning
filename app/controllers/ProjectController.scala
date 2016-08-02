@@ -148,7 +148,7 @@ class ProjectController extends Controller with Secured {
       } else {
         Ok("Du har ikke retigheder til at ændre dette projket.")
       }
-  } //todo fix så den slætter alt
+  }
 
   def getProject(id: Int) = withAuth { username => implicit request =>
     val project = Await.result(DAL.usersProjects(username), Duration.Inf)

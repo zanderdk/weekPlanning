@@ -167,7 +167,6 @@ trait ScheduleService {
 
     val dut: Seq[Int] = Await.result(db.run(q.result), Duration.Inf).map(x => x.id)
 
-    //todo: overvej at fixe det her
     val con1 = Await.result(Future.sequence(dut.map(deleteDuty)), Duration.Inf)
       .map {
         case Success(_) => true

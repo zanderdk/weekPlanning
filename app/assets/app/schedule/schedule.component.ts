@@ -82,9 +82,7 @@ export default class ScheduleComponent implements OnInit {
                     this.canEdit = (res === "Read")? false : true
                 })
         })
-
         this.refresh()
-
     }
 
     markedIds() {

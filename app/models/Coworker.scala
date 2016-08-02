@@ -90,7 +90,7 @@ case class Coworker(id: Int, projectId: Int, time: Double, name: String) {
 object Coworker{
   def tupled(tup:(Int, Int, Double, String)) : Coworker = Coworker(tup._1, tup._2, tup._3, tup._4)
 
-  implicit val coworkerFormats = Json.format[Coworker] //todo implement with days
+  implicit val coworkerFormats = Json.format[Coworker]
 }
 class CoworkerTableDef(tag: Tag) extends Table[Coworker](tag, "coworker") {
 

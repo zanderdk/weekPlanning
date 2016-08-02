@@ -1,6 +1,6 @@
 package service
 
-import models.{Coworker, Week, WorkType}
+import models.{Coworker, Location, Week, WorkType}
 import play.api.mvc.Result
 import slick.driver.JdbcProfile
 import slick.driver.PostgresDriver.api._
@@ -27,6 +27,8 @@ trait ProjectService {
   def getCoworkers(projectId: Int): Future[Seq[Coworker]]
   def deleteCoworker(projectId: Int, name:String): Future[Try[String]]
   def getWorkTypes(projectId: Int): Future[Seq[WorkType]]
+  def getLocations(projectId: Int): Future[Seq[Location]]
+  def deleteLocation(locationId: Int): Future[Try[String]]
 
   def getUser(username: String): Future[Option[User]]
 
@@ -84,18 +86,16 @@ trait ProjectService {
     db.run(query.result.headOption)
   }
 
-
-  def userProjectsAndOwner(username:String) : Future[Seq[(Project, Level, String)]] = Future { //todo: lav til en query
-   val lst = Await.result(usersProjects(username), Duration.Inf)
-    lst.map{
-      case(pro, level) => {
-        val owner = Await.result(getProjectOwner(pro.id), Duration.Inf)
-        owner match {
-          case Some(x) => (pro, level, x.username)
-          case _ => throw new Exception("project not found")
-        }
-      }
-    }
+  def userProjectsAndOwner(username:String) : Future[Seq[(Project, Level, String)]] = {
+    val q = for {
+      u <- users if u.username === username
+      c <- collaborations if c.userId === u.id
+      p <- projects if p.id === c.projectId
+      cc <- collaborations if p.id === cc.projectId && cc.level === Level.Owner
+      uu <- users if uu.id === cc.userId
+    } yield (p, c.level, uu.username)
+    val k: Future[Seq[(Project, Level, String)]] = db.run(q.result)
+    k
   }
 
   def deleteAllColaboratorsForProject(id: Int): Future[Try[String]] = {
@@ -133,9 +133,10 @@ trait ProjectService {
       co <- getCoworkers(id)
       we <- getWeeks(id)
       wo <- getWorkTypes(id)
-    } yield (co, we, wo)
+      lo <- getLocations(id)
+    } yield (co, we, wo, lo)
 
-    val (cow, wee, wor) = Await.result(getQ, Duration.Inf)
+    val (cow, wee, wor, loc) = Await.result(getQ, Duration.Inf)
 
     val delWeeks =  Await.result(Future.sequence(wee.map(x => deleteWeek(x.id))), Duration.Inf)
       .map(x => x.isSuccess).fold(true)(_ && _)
@@ -149,7 +150,10 @@ trait ProjectService {
     val deleteColla = Await.result(deleteAllColaboratorsForProject(id), Duration.Inf)
           .isSuccess
 
-    if(delWeeks && delWorkTypes && delCoworker && deleteColla)
+    val deleteLoc = Await.result(Future.sequence(loc.map(x => deleteLocation(x.id))), Duration.Inf)
+      .map(x => x.isSuccess).fold(true)(_ && _)
+
+    if(delWeeks && delWorkTypes && delCoworker && deleteColla && deleteLoc)
       db.run(projects.filter(_.id === id).delete).map(res => Success(res)).recover{
       case ex: Exception => Failure(ex)
     } else {

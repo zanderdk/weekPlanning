@@ -15,7 +15,7 @@ class UserController extends Controller with Secured {
     val k = request.queryString.get("name")
     val name: String = k.map(_.headOption).getOrElse( Some("") ).get
     if(name.length > 2) {
-      val users = Await.result(DAL.listAllUsers, Duration.Inf) //todo Inf
+      val users = Await.result(DAL.listAllUsers, Duration.Inf)
         .filter(u => u.username.toLowerCase.indexOf(name.toLowerCase) != -1 && u.username != username)
         .map(u => u.copy(password = "")).take(5)
       Ok(Json.toJson(users))
