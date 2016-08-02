@@ -29,7 +29,9 @@
                             <spn class="octicon octicon-x"></spn>
                         </spn>
                     </a>
-                    <input type="checkbox" (click)="togleMark(week.id)" [checked]="week.marked" />
+                    <div (click)="togleMark(week.id)" >
+                        <input type="checkbox" [checked]="week.marked" />
+                    </div>
                 </div>
                 <ul [hidden]="!week.expanded">
                     <li *ngFor="let day of week.days">
