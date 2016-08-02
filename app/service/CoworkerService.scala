@@ -24,7 +24,7 @@ trait CoworkerService {
 
 
   def updateCoworker(projectId: Int, coworker: Coworker): Future[Try[String]] = {
-    val q = for { c <- coworkers if c.name === coworker.name } yield (c.name, c.time)
+    val q = for { c <- coworkers if c.name === coworker.name && c.projectId === projectId } yield (c.name, c.time)
     val k = q.update(coworker.name, coworker.time).map(i => if(i > 0) Success("ok") else Failure{ new Exception("inger bruger med det navn")})
     db.run(k)
   }

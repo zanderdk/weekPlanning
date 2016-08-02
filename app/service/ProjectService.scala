@@ -40,10 +40,46 @@ trait ProjectService {
     db.run(collaborations.schema.create)
   }
 
-  def checkUser(projectId: Int, username: String, level:Level)(fun:(Boolean) => Result): Result = {
+  def checkUser(projectId: Int,
+                username: String,
+                level:Level,
+                locationId: Option[Int] = None,
+                weekId: Option[Int] = None,
+                dayId: Option[Int] = None,
+                dutyId: Option[Int] = None
+               )(fun:(Boolean) => Result): Result = {
     val lev = Await.result(getUserLevel(projectId, username), Duration.Inf)
     lev match {
-      case Some(x) => if(x.id >= level.id) fun(true) else fun(false)
+      case Some(x) => {
+        val locTest = locationId match {
+          case None => true
+          case Some(i) => {
+            Await.result(DAL.getLocation(i), Duration.Inf).exists(x => x.projectId == projectId)
+          }
+        }
+        val weekTest = weekId match {
+          case None => true
+          case Some(i) => {
+            Await.result(DAL.getWeeks(projectId), Duration.Inf).map(x => x.id).contains(i)
+          }
+        }
+
+        val dayTest = dayId match {
+          case None => true
+          case Some(i) => {
+            Await.result(DAL.getDay(i), Duration.Inf).exists(d => d.week.projectId == projectId)
+          }
+        }
+
+        val dutyTest = dutyId match {
+          case None => true
+          case Some(i) => {
+            Await.result(DAL.getDuty(i), Duration.Inf).exists(x => x.day.week.projectId == projectId)
+          }
+        }
+
+        if(x.id >= level.id && locTest && weekTest && dutyTest && dayTest) fun(true) else fun(false)
+      }
       case _ => fun(false)
     }
   }

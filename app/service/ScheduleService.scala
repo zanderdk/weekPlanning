@@ -107,6 +107,10 @@ trait ScheduleService {
     k
   }
 
+  def getDay(dayId: Int): Future[Option[Day]] = {
+    db.run(days.filter(d => d.id === dayId).result.headOption)
+  }
+
   def getWeekFromDay(day: Day): Future[Option[Week]] = {
     db.run(weeks.filter(w => w.id === day.weekId).result.headOption)
   }

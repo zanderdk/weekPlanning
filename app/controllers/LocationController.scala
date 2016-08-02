@@ -32,9 +32,9 @@ class LocationController extends Controller with Secured {
       }
     }
   }
-
+    //todo: problem
    def deleteLocation(projectId: Int, locationId: Int) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Write) {check =>
+    DAL.checkUser(projectId, username, Level.Write, Some(locationId)) {check =>
       if(!check) Ok("du har ikke retighed til at ændre dette projekt") else {
         Await.result(DAL.deleteLocation(locationId), Duration.Inf) match {
           case Failure(ex) => Ok(ex.getMessage)
@@ -46,7 +46,7 @@ class LocationController extends Controller with Secured {
 
   def updateLocation(json: String) = withAuth { username => implicit request =>
     val location = Json.parse(json).as[Location]
-    DAL.checkUser(location.projectId, username, Level.Write) {check =>
+    DAL.checkUser(location.projectId, username, Level.Write, Some(location.id)) {check =>
       if(!check) Ok("du har ikke retighed til at ændre dette projekt") else {
          val loc = Await.result(DAL.getLocations(location.projectId), Duration.Inf)
           .find(l => l.name == location.name && l.id != location.id && l.projectId == location.projectId)
@@ -73,7 +73,7 @@ class LocationController extends Controller with Secured {
   }
 
   def getLocation(projectId:Int, locationId: Int) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Read) {check =>
+    DAL.checkUser(projectId, username, Level.Read, Some(locationId)) {check => //overvej at flytte check her til
     val location: Option[Location] = if(!check) None else {
         Await.result(DAL.getLocation(locationId), Duration.Inf)
       }

@@ -17,13 +17,10 @@ import scala.util.{Failure, Success}
 
 class ScheduleController extends Controller with Secured {
 
-  //todo fix check user til at tjekke for weekId
-
   def getDays(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Read){check =>
+    DAL.checkUser(projectId, username, Level.Read, None, Some(weekId)){check =>
 
       val days:Seq[Day] = if(check) {
-
         val q = for {
           q1 <- DAL.getDays(weekId)
           q2 <- DAL.getDutys(weekId)
@@ -44,7 +41,7 @@ class ScheduleController extends Controller with Secured {
   }
 
   def getDutys(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Read) {check =>
+    DAL.checkUser(projectId, username, Level.Read, None, Some(weekId)) {check =>
       val dutys: Seq[Duty] = if(!check) Seq() else {
         Await.result(DAL.getDutys(weekId), Duration.Inf)
       }
@@ -53,7 +50,7 @@ class ScheduleController extends Controller with Secured {
   }
 
   def getDuty(projectId: Int, dutyId: Int)  = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Read) {check =>
+    DAL.checkUser(projectId, username, Level.Read, None, None, None, Some(dutyId)) {check =>
       if(!check) {
         Ok("du har ikke retigheder til at se dette projekt")
       } else {
@@ -67,9 +64,17 @@ class ScheduleController extends Controller with Secured {
 
 
   def addDutys(projectId: Int, json: String) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Write) { check =>
+    val dutys = Json.parse(json).as[Seq[Duty]]
+    val dayId = dutys.map(x => x.dayId).foldLeft(-1){
+      case (x,y) => {
+        if(x == -1) y else {
+          if(x == y) x else 0
+        }
+      }
+    }
+    if(dayId > 0) {
+    DAL.checkUser(projectId, username, Level.Write, None, None, Some(dayId), None) { check =>
       if(!check) Ok("du har ikke retighed til at tilføje vagtet") else {
-        val dutys = Json.parse(json).as[Seq[Duty]]
         Await.result(DAL.addDutys(dutys), Duration.Inf) match {
           case Success(_) => Ok("ok")
           case Failure(ex) => Ok(ex.getMessage)
@@ -77,10 +82,13 @@ class ScheduleController extends Controller with Secured {
         Ok("ok")
       }
     }
+    } else {
+      Ok("fejl i input")
+    }
   }
 
   def getWeek(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Read){check =>
+    DAL.checkUser(projectId, username, Level.Read, None, Some(weekId)){check =>
       if(!check) Ok("err")
       else {
         Await.result(DAL.findWeek(w => w.id === weekId), Duration.Inf) match {
@@ -92,7 +100,7 @@ class ScheduleController extends Controller with Secured {
   }
 
   def deleteDuty(projectId: Int, dutyId: Int) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Write) { check =>
+    DAL.checkUser(projectId, username, Level.Write, None, None, None, Some(dutyId)) { check =>
       if(!check) Ok("du har ikke retighed til at ændre dette projekt") else {
         Await.result(DAL.deleteDuty(dutyId), Duration.Inf) match {
           case Success(_) => Ok("ok")
@@ -103,7 +111,7 @@ class ScheduleController extends Controller with Secured {
   }
 
   def deleteWeek(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
-    DAL.checkUser(projectId, username, Level.Write) { check =>
+    DAL.checkUser(projectId, username, Level.Write, None, Some(weekId)) { check =>
       if(!check) Ok("du har ikke retighed til at ændre dette projekt") else {
         Await.result(DAL.deleteWeek(weekId), Duration.Inf) match {
           case Success(_) => Ok("ok")
@@ -116,7 +124,7 @@ class ScheduleController extends Controller with Secured {
   def updateDuty(projectId: Int, json: String) = withAuth { username => implicit resquest =>
     val duty = Json.parse(json).as[Duty]
 
-    DAL.checkUser(projectId, username, Level.Write){ check =>
+    DAL.checkUser(projectId, username, Level.Write, None, None, None, Some(duty.id)){ check =>
       if(!check) Ok("du har ikke retighed til at ændre dette projekt.")
       else {
         Await.result(DAL.updateDuty(duty), Duration.Inf) match {
@@ -132,7 +140,7 @@ class ScheduleController extends Controller with Secured {
   def updateWeek(json: String) = withAuth { username => implicit resquest =>
     val week = Json.parse(json).as[Week]
 
-    DAL.checkUser(week.projectId, username, Level.Write){ check =>
+    DAL.checkUser(week.projectId, username, Level.Write, None, Some(week.id)){ check =>
       if(!check) Ok("du har ikke retighed til at ændre dette projekt.")
       else {
         Await.result(DAL.findWeek{w =>
