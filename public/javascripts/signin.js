@@ -15,6 +15,42 @@ $(function() {
 		e.preventDefault();
 	});
 
+    $("#username").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#login-submit").click();
+        }
+    });
+
+    $("#password").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#login-submit").click();
+        }
+    });
+
+    $("#usernameReg").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#register-submit").click();
+        }
+    });
+
+    $("#passwordReg").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#register-submit").click();
+        }
+    });
+
+    $("#emailReg").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#register-submit").click();
+        }
+    });
+
+    $("#confirmPasswordReg").keyup(function(event){
+        if(event.keyCode == 13){
+            $("#register-submit").click();
+        }
+    });
+
 });
 
 function signin() {

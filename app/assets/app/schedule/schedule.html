@@ -2,11 +2,11 @@
     <div class="tree">
         <div class="topcorner">
             <a [hidden]="!canEdit" [routerLink]="['/editWeek', projectId, 0]">
-                <div class="label label-primary">
+                <div class="label label-success">
                     <span class="mega-octicon octicon-plus"></span>
                 </div>
             </a>
-            <div class="label label-success" (click)="print()">
+            <div class="label label-primary" (click)="print()">
                 <span class="mega-octicon octicon-checklist"></span>
             </div>
         </div>
@@ -29,16 +29,16 @@
                             <spn class="octicon octicon-x"></spn>
                         </spn>
                     </a>
-                    <div (click)="togleMark(week.id)" >
-                        <input type="checkbox" [checked]="week.marked" />
-                    </div>
+                </div>
+                <div (click)="togleMark(week.id)" >
+                    <input type="checkbox" [checked]="week.marked" />
                 </div>
                 <ul [hidden]="!week.expanded">
                     <li *ngFor="let day of week.days">
                         <span (click)="userExpandDay(day.id)" class="label sp label-{{day.color()}}"><i [hidden]="day.expanded" class="octicon octicon-plus" ></i> <i [hidden]="!day.expanded" class="octicon octicon-dash"></i> {{day.weekDay}}, {{day.date}}</span>
                         <div>
                             <a [hidden]="!canEdit" [routerLink]="['/addDuty', projectId, day.id]">
-                                <spn class="label label-primary">
+                                <spn class="label label-success">
                                     <spn class="octicon octicon-plus"></spn>
                                 </spn>
                             </a>
