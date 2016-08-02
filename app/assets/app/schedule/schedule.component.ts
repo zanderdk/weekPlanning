@@ -87,8 +87,12 @@ export default class ScheduleComponent implements OnInit {
 
     }
 
+    markedIds() {
+        return this.weeks.filter(x => x.marked).map(x => x.id)
+    }
+
     print() {
-        let weekIds = this.weeks.filter(x => x.marked).map(x => x.id)
+        let weekIds = this.markedIds()
         let json = JSON.stringify(weekIds)
         window.location.href = "/makePrint?projectId=" + this.projectId + "&json=" + json;
     }

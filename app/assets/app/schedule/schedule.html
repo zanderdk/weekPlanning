@@ -27,7 +27,7 @@
                     <span class="mega-octicon octicon-plus"></span>
                 </div>
             </a>
-            <div class="label label-primary" (click)="print()">
+            <div class="label label-primary" [hidden]="markedIds().length == 0" (click)="print()">
                 <span class="mega-octicon octicon-checklist"></span>
             </div>
         </div>
