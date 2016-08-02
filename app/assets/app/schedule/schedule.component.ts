@@ -23,6 +23,9 @@ export default class ScheduleComponent implements OnInit {
     private weeks: Week[] = []
     private menuService: MenuService
     private restExpand: number[]
+    private deleteText: string = ""
+    private deleteText2: string = ""
+    private deleteFunc: () => void = () => {}
 
     refresh() {
          this.scheduleService.getWeeks(this.projectId).then( w => {
@@ -194,6 +197,26 @@ export default class ScheduleComponent implements OnInit {
     deleteDuty(dutyId: number) {
          this.scheduleService.deleteDuty(this.projectId, dutyId)
             .then(res => this.check(res))
+    }
+
+    changeModalDuty(weekId: number, dayId: number, dutyId: number) {
+        let week = this.weeks.find(w => w.id === weekId)
+        let day = week.days.find(d => d.id === dayId)
+        let duty = day.dutys.find(d => d.id === dutyId)
+        this.deleteText = "Slet Vagten " + duty.coworker.name + " - " + duty.location.name + " - " + duty.workType.name
+        this.deleteText2 = "Sikker på du vil slette denne vagt?"
+        this.deleteFunc = () => {
+            this.deleteDuty(dutyId)
+        }
+    }
+
+    changeModalWeek(weekId: number) {
+        let week = this.weeks.find(x => x.id === weekId)
+        this.deleteText = "uge " + week.weekNo + " i " + week.year
+        this.deleteText2 = "Sikker på du vil slette denne uge?"
+        this.deleteFunc = () => {
+            this.delete(weekId)
+        }
     }
 
     delete(weekId: number) {
