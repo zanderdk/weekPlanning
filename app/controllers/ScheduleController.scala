@@ -65,25 +65,25 @@ class ScheduleController extends Controller with Secured {
 
   def addDutys(projectId: Int, json: String) = withAuth { username => implicit request =>
     val dutys = Json.parse(json).as[Seq[Duty]]
-    val dayId = dutys.map(x => x.dayId).foldLeft(-1){
-      case (x,y) => {
-        if(x == -1) y else {
-          if(x == y) x else 0
-        }
-      }
-    }
-    if(dayId > 0) {
-    DAL.checkUser(projectId, username, Level.Write, None, None, Some(dayId), None) { check =>
+    DAL.checkUser(projectId, username, Level.Write, None, None, None, None) { check =>
       if(!check) Ok("du har ikke retighed til at tilføje vagtet") else {
-        Await.result(DAL.addDutys(dutys), Duration.Inf) match {
-          case Success(_) => Ok("ok")
-          case Failure(ex) => Ok(ex.getMessage)
+        val week = Await.result(DAL.getDay(dutys(0).dayId), Duration.Inf).get.week
+        val ids = week.days.map(x => x.id)
+        val idds = dutys.map(x => x.dayId)
+        val ch = idds.foldLeft(true) {
+          case (x, y) => {
+            x && ids.contains(y)
+          }
         }
-        Ok("ok")
+        if(ch) {
+          Await.result(DAL.addDutys(dutys), Duration.Inf) match {
+            case Success(_) => Ok("ok")
+            case Failure(ex) => Ok(ex.getMessage)
+          }
+        } else {
+          Ok("Du kan ikke ændre dette projekt.")
+        }
       }
-    }
-    } else {
-      Ok("fejl i input")
     }
   }
 
