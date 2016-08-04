@@ -31,7 +31,7 @@ class WorkTypeController extends Controller with Secured {
       case None => Seq()
     }
 
-    Ok(Json.toJson(seq))
+    Ok(Json.toJson(seq.sortBy(x => x.name)))
   }
 
   def updateWorkType(json: String) = withAuth { username => implicit request =>

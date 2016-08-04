@@ -167,7 +167,7 @@ class ProjectController extends Controller with Secured {
         val owner = if (l == Level.Owner) "Mig" else o
         (p, l, owner)
       }
-    val json = Json.toJson(pro)
+    val json = Json.toJson(pro.sortBy(x => x._1.name))
     Ok(json)
   }
 

@@ -18,6 +18,17 @@ export class ScheduleService {
     private getDutyUrl = "/getDuty"
     private updateDutyUrl = "/updateDuty"
     private deleteDutyUrl = "/deleteDuty"
+    private nextWeekUrl = "/getNextWeek"
+
+    public getNextWeek(projectId: number): Promise<Week> {
+        return this.http.get(this.nextWeekUrl + "?projectId=" + projectId)
+            .toPromise().then(res => {
+                let w = this.extractData(res)
+                w['days'] = []
+                w['expanded'] = false
+                return w
+            })
+    }
 
     public getWeek(projectId: number, weekId:number): Promise<Week> {
         return this.http.get(this.getWeekUrl + "?projectId=" + projectId + "&weekId=" + weekId)

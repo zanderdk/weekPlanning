@@ -37,8 +37,13 @@ export default class EditWeekComponent implements OnInit {
             this.edit = (weekId === 0)? false : true
             this.week.id = weekId
             this.week.projectId = id
+
             if(this.edit) {
                 this.scheduleService.getWeek(this.week.projectId, this.week.id).then(w => {
+                    this.week = w
+                })
+            } else {
+                this.scheduleService.getNextWeek(this.week.projectId).then(w => {
                     this.week = w
                 })
             }

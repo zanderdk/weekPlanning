@@ -27,6 +27,7 @@ GET     /deleteWorkType             weekplanning.controllers.WorkTypeController.
 GET     /getWorkTypes               weekplanning.controllers.WorkTypeController.getWorkTypes(id: Int)
 GET     /getWorkType                weekplanning.controllers.WorkTypeController.getWorkType(id: Int)
 GET     /getWeeks                   weekplanning.controllers.ScheduleController.getWeeks(projectId: Int)
+GET     /getNextWeek                weekplanning.controllers.ScheduleController.getNextWeek(projectId: Int)
 GET     /getDays                    weekplanning.controllers.ScheduleController.getDays(projectId: Int, weekId: Int)
 GET     /addWeek                    weekplanning.controllers.ScheduleController.addWeek(projectId: Int, year: Int, weekNo: Int)
 GET     /updateWeek                 weekplanning.controllers.ScheduleController.updateWeek(json: String)

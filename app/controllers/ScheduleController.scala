@@ -40,6 +40,18 @@ class ScheduleController extends Controller with Secured {
     }
   }
 
+  def getNextWeek(projectId: Int) = withAuth { username => implicit request =>
+    DAL.checkUser(projectId, username, Level.Read) {check =>
+      if (!check) Ok("") else {
+        val weeks = Await.result(DAL.getWeeks(projectId), Duration.Inf)
+        val week = weeks.sortBy(w => (w.year, w.weekNo)).reverse.head
+        val nextWeekYear = if(week.weekNo == 53) week.year + 1 else week.year
+        val nextWeekNo = if(week.weekNo == 53) 1 else week.weekNo + 1
+        Ok(Json.toJson(Week(0, projectId, nextWeekYear, nextWeekNo)))
+      }
+    }
+  }
+
   def getDutys(projectId: Int, weekId: Int) = withAuth { username => implicit request =>
     DAL.checkUser(projectId, username, Level.Read, None, Some(weekId)) {check =>
       val dutys: Seq[Duty] = if(!check) Seq() else {

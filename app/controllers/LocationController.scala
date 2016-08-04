@@ -68,7 +68,7 @@ class LocationController extends Controller with Secured {
     val locations: Seq[Location] = if(!check) Seq() else {
         Await.result(DAL.getLocations(projectId), Duration.Inf)
       }
-      Ok(Json.toJson(locations))
+      Ok(Json.toJson(locations.sortBy(x => x.name)))
     }
   }
 
