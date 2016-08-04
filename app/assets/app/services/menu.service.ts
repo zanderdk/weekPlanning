@@ -14,7 +14,7 @@ export class MenuService {
     
     public initDefaults(active: number) {
         $(".navbar-nav").empty();
-        this.addToMenu("Projekter", "/projects", active === 4)
+        this.addToMenu("Projekter", "/", active === 4)
         this.addToMenuRightReal("Log ud", "/logout", false)
         
         if(this.projectId !== 0){
