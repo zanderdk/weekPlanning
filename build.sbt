@@ -19,6 +19,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick-evolutions" % "2.0.0",
   "org.postgresql" % "postgresql" % "9.4-1206-jdbc42",
 
+  "com.typesafe.play" %% "play-mailer" % "5.0.0",
+
   //webjars npm
   "org.webjars.npm" % "systemjs" % "0.19.26",
   "org.webjars.npm" % "todomvc-common" % "1.0.2",

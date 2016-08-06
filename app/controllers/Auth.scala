@@ -1,9 +1,11 @@
 package weekplanning.controllers
 
+import javax.inject.Inject
+
 import play.api.data.Form
 import play.api.data.Forms._
 import play.api.mvc._
-import service.DAL
+import service.{DAL, EmailService}
 import weekplanning.Global
 import weekplanning.model.User
 
@@ -11,7 +13,7 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
-class Auth extends Controller {
+class Auth @Inject() (emailService: EmailService) extends Controller {
 
   val loginForm = Form(
     tuple(
@@ -67,14 +69,24 @@ class Auth extends Controller {
       formWithErrors => BadRequest(views.html.signin(Global.name)),
       user => {
         val us = (user._1.toLowerCase, user._2, user._3.toLowerCase)
-        val usr = Function.tupled( User.apply(_ : String, _ : String, _ : String, true, false) )(us)
+        val usr = Function.tupled( User.apply(_ : String, _ : String, _ : String, false, false) )(us)
         Await.result(DAL.addUser(usr), Duration.Inf) match {
           case Failure(ex) => Ok(ex.getCause.getMessage)
           case Success(x) =>
-            Redirect(routes.Application.index).withSession(Security.username -> user._1)
+            emailService.sendConfirmEmail(usr.username, usr.email)
+            Ok(views.html.signinEmail("Confirm Email"))
         }
       }
     )
+  }
+
+  def confirm(username: String, code:String) = Action {
+    if(emailService.genConfirmCode(username) == code) {
+      Await.result(DAL.activateUser(username), Duration.Inf) match {
+        case Failure(ex) => Ok(ex.getMessage)
+        case Success(_) => Redirect(routes.Application.index).withSession(Security.username -> username)
+      }
+    } else Ok("koden matcher ikke")
   }
 
   def check(username: String, password: String) = {

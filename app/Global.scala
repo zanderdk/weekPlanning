@@ -7,4 +7,5 @@ object Global {
   val invalidEmailMessage = "Email er ikke gyldig."
   val emailInUseMessage = "Email er allerede i brug."
   val menu = Seq(("Projects", "projects"))
+  val host = "vagtplanen.tk"
 }

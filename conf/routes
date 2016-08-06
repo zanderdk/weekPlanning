@@ -46,6 +46,7 @@ GET     /updateLocation             weekplanning.controllers.LocationController.
 GET     /deleteLocation             weekplanning.controllers.LocationController.deleteLocation(projectId: Int, locationId: Int)
 
 
+GET     /confirm                    weekplanning.controllers.Auth.confirm(username:String, code:String)
 POST    /signinInitCheck            weekplanning.controllers.Auth.signinInitCheck
 POST    /authenticate               weekplanning.controllers.Auth.authenticate
 POST    /register                   weekplanning.controllers.Auth.register

@@ -26,6 +26,19 @@ trait UserService {
     }
   }
 
+  def activateUser(username: String): Future[Try[String]] = {
+    val user = Await.result(getUser(username), Duration.Inf)
+    user match {
+      case Some(x) => {
+        val q = for {u <- users if u.username === username} yield (u.enabled)
+        val k = q.update(true)
+        val x = db.run(k).map(_ => Success("ok"))
+        x
+      }
+      case None => Future { Failure { new Exception("denne bruger findes ikke") } }
+    }
+  }
+
   def deleteUser(username: String): Future[Try[Int]] = {
     db.run(users.filter(_.username === username).delete).map(res => Success(res)).recover{
       case ex: Exception => Failure(ex)
